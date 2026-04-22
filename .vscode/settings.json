@@ -1,3 +1,10 @@
 {
+  "javascript.preferences.importModuleSpecifierEnding": "js"
+}
+
+
+/*
+{
     "git.ignoreLimitWarning": true
 }
+    */
