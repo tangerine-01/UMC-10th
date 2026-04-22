@@ -2,7 +2,7 @@
 name: "⚙️ CI/CD"
 about: CI/CD 작업 템플릿입니다.
 title: "⚙️ CI/CD:"
-labels: ''
+labels: "⚙ CI/CD"
 assignees: tangerine-01
 
 ---
