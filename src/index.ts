@@ -32,7 +32,7 @@ app.post("/shops/:shopId/missions", handleCreateMission);
 // 전역 에러 핸들러
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.message);
-  res.status(500).json({ error: err.message });
+  res.status(500).json({ isSuccess: false, code: "COMMON000", message: err.message });
 });
 
 // 4. 서버 시작
