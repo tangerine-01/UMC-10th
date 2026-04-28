@@ -11,6 +11,7 @@ export interface UserSignUpRequest {
   point: bigint;
   email: string;
   preferences: number[];
+  password: string;
   // address?: string;  ?가 붙으면 '없을 수도 있음(선택)'이라는 뜻이에요!
 }
 
@@ -29,6 +30,7 @@ export const bodyToUser = (body: UserSignUpRequest) => {
     point: body.point,
     email: body.email,
     preferences: body.preferences,
+    password: body.password,
     // address: body.address || "", //선택 
   };
 };

@@ -1,11 +1,11 @@
-import { UserSignUpRequest } from "../dtos/user.dto.js"; //인터페이스 가져오기 
-import { responseFromUser } from "../dtos/user.dto.js";
-import {
-  addUser,
-  getUser,
-} from "../repositories/user.repository.js";
+import bcrypt from "bcrypt";;
+import { UserSignUpRequest, responseFromUser } from "../dtos/user.dto.js"; //인터페이스 가져오기 
+import { addUser, getUser } from "../repositories/user.repository.js";
 
 export const userSignUp = async (data: Omit<UserSignUpRequest, "birth_data"> & { birth_data: Date }) => {
+  // 비밀번호 해싱
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  
   const joinUserId = await addUser({
     user_name: data.user_name,
     nickname: data.nickname,
@@ -17,6 +17,7 @@ export const userSignUp = async (data: Omit<UserSignUpRequest, "birth_data"> & {
     point: data.point,
     email: data.email,
     preferences: data.preferences,
+    password: hashedPassword,
     // birth_data: new Date(data.birth_data),    // 문자열을 Date 객체로 변환해서 넘겨줍니다. 이렇게 해도 됨.
   });
 

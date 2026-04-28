@@ -21,7 +21,7 @@ export const addUser = async (data: any): Promise<number | null> => {
     // [수정] 컬럼명을 새 DB 구조(user_name, nickname, user_phone 등)에 맞게 변경함
     // [수정] preferences 컬럼 추가함 (JSON 타입으로 저장)
     const [result] = await pool.query<ResultSetHeader>(
-      `INSERT INTO user (user_name, nickname, user_phone, user_gender, birth_data, address, role, point, email, preferences) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+      `INSERT INTO user (user_name, nickname, user_phone, user_gender, birth_data, address, role, point, email, preferences, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         data.user_name,
         data.nickname,
@@ -33,6 +33,7 @@ export const addUser = async (data: any): Promise<number | null> => {
         data.point,
         data.email,
         JSON.stringify(data.preferences),
+        data.password,
       ]
     );
 
