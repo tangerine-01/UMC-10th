@@ -1,5 +1,5 @@
 $kind: http-request
-name: New Request
 url: ""
 method: GET
+examples: .resources/New Request.resources/examples
 order: 1776673952970

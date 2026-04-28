@@ -1,7 +1,10 @@
 import dotenv from "dotenv";
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
+import { handleCreateReview } from "./modules/reviews/controllers/review.controller.js";
+import { handleCreateMission, handleChallengeMission } from "./modules/missions/controllers/mission.controller.js";
+import { handleCreateShop } from "./modules/shops/controllers/shop.controller.js";
 
 // 1. 환경 변수 설정
 dotenv.config();
@@ -21,6 +24,16 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/users", handleUserSignUp);
+app.post("/shops/:shopId/reviews", handleCreateReview);
+app.post("/missions/challenge", handleChallengeMission);
+app.post("/regions/:regionId/shops", handleCreateShop);
+app.post("/shops/:shopId/missions", handleCreateMission);
+
+// 전역 에러 핸들러
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.message);
+  res.status(500).json({ error: err.message });
+});
 
 // 4. 서버 시작
 app.listen(port, () => {

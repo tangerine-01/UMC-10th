@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: http://localhost:3000/shops/1/reviews
+  method: POST
+  body:
+    type: json
+    content: |-
+      {
+        "user_id": 1,
+        "user_mission_id": 1,
+        "rating": 4.5,
+        "body": "너무 맛있어요!",
+        "image_urls": [
+          "https://your-bucket.s3.amazonaws.com/review1.jpg"
+        ]
+      }
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  headers:
+    x-powered-by: Express
+    access-control-allow-origin: "*"
+    content-type: application/json; charset=utf-8
+    content-length: "69"
+    etag: W/"45-fCDGYRADAasH09kAhp18IQytL3o"
+    date: Mon, 27 Apr 2026 18:36:10 GMT
+    connection: keep-alive
+    keep-alive: timeout=5
+  body:
+    type: json
+    content: |-
+      {
+        "error": "이미 해당 미션에 대한 리뷰가 존재합니다."
+      }
+order: 1777314977069
