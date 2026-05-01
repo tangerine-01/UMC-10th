@@ -7,6 +7,7 @@ import {
   checkShopExists,
   getReview,
   getReviewImages,
+  getReviewsByShopId,
 } from "../repositories/review.repository.js";
 
 export const createReview = async (
@@ -55,4 +56,18 @@ export const createReview = async (
   const images = await getReviewImages(reviewId);
 
   return responseFromReview(review, images);
+};
+
+export const getReviews = async (shopId: number, cursor: number) => {
+  // 0. 가게 존재 여부 확인
+  const shopExists = await checkShopExists(shopId);
+  if (!shopExists) {
+    throw new Error("존재하지 않는 가게입니다.");
+  }
+
+  // 1. 리뷰 목록 조회
+  const reviews = await getReviewsByShopId(shopId, cursor);
+
+  // 2. 응답 반환
+  return responseFromReviews(reviews);
 };

@@ -122,3 +122,26 @@ export const checkShopExists = async (shopId: number): Promise<boolean> => {
     conn.release();
   }
 };
+
+export const getReviewsByShopId = async (
+  shopId: number,
+  cursor: number,
+  limit: number = 10
+): Promise<any[]> => {
+  const conn = await pool.getConnection();
+  try {
+    const [rows] = await conn.query<RowDataPacket[]>(
+      `SELECT r.id, r.rating, r.body, r.created_date, u.nickname
+       FROM review r
+       JOIN user u ON r.user_id = u.id
+       WHERE r.shop_id = ?
+       ${cursor ? "AND r.id < ?" : ""}
+       ORDER BY r.id DESC
+       LIMIT ?;`,
+      cursor ? [shopId, cursor, limit] : [shopId, limit]
+    );
+    return rows as any[];
+  } finally {
+    conn.release();
+  }
+};

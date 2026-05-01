@@ -29,3 +29,16 @@ export const responseFromReview = (review: any, images: any[]) => {
     created_date: review.created_date,
   };
 };
+
+export const responseFromReviews = (reviews: any[]) => {
+  return {
+    reviewData: reviews.map((r) => ({
+      review_id: r.id,
+      nickname: r.nickname,
+      rating: Number(r.rating),
+      body: r.body,
+      created_date: r.created_date,
+    })),
+    cursorId: reviews.length > 0 ? reviews[reviews.length - 1].id : null,
+  };
+};

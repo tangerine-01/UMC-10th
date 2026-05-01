@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id          BigInt   @id @default(autoincrement())
+  userName    String   @map("user_name") @db.VarChar(255)
+  nickname    String?  @db.VarChar(32)
+  userPhone   String   @map("user_phone") @db.Char(11)
+  userGender  Gender   @map("user_gender")
+  birthData   DateTime @map("birth_data") @db.Date
+  address     String   @db.Text
+  role        Role
+  point       Int
+  email       String   @db.VarChar(255)
+  preferences Json?
+  password    String   @db.VarChar(255)
+
+  userFoodCategories UserFoodCategory[]
+
+  @@map("user")
+}
+
+model FoodCategory {
+  id                 BigInt             @id @default(autoincrement()) @map("food_category_id")
+  name               String             @map("food_category_name") @db.VarChar(255)
+
+  userFoodCategories UserFoodCategory[]
+
+  @@map("food_category")
+}
+
+model UserFoodCategory {
+  id             BigInt       @id @default(autoincrement())
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  foodCategoryId BigInt       @map("food_category_id")
+  user           User         @relation(fields: [userId], references: [id])
+  userId         BigInt       @map("id2")
+
+  @@index([foodCategoryId], map: "food_category_id")
+  @@index([userId], map: "id2")
+  @@map("user_food_category")
+}
+
+enum Gender {
+  여성
+  남성
+}
+
+enum Role {
+  일반_사용자 @map("일반 사용자")
+  가게_운영자 @map("가게 운영자")
+}

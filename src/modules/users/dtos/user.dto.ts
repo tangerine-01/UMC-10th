@@ -36,17 +36,19 @@ export const bodyToUser = (body: UserSignUpRequest) => {
 };
 
 // responseFromUser 만들기
-export const responseFromUser = ({ user }: { user: any }) => {
+export const responseFromUser = (data: { user: any; preferences: any[] }) => {
+  const preferCategory = data.preferences.map((p) => p.foodCategory.name);
   return {
-    user_name: user.user_name,
-    nickname: user.nickname,
-    user_phone: user.user_phone,
-    user_gender: user.user_gender,
-    birth_data: user.birth_data,
-    address: user.address,
-    role: user.role,
-    point: user.point,
-    email: user.email,
-    preferences: user.preferences,
+    userName: data.user.userName,
+    nickname: data.user.nickname,
+    userPhone: data.user.userPhone,
+    userGender: data.user.userGender,
+    birthData: data.user.birthData,
+    address: data.user.address,
+    role: data.user.role,
+    point: data.user.point,
+    email: data.user.email,
+    preferences: data.user.preferences,
+    preferCategory: preferCategory,
   };
 };
