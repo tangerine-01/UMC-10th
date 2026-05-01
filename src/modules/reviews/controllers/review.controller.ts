@@ -47,13 +47,16 @@ export const handleGetReviews = async (
       return;
     }
 
-    const shopId = parseInt(shopIdParam);
+    const shopId = parseInt(shopIdParam as string);
     if (isNaN(shopId)) {
       res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 가게 ID입니다." });
       return;
     }
 
-    const cursor = parseInt(req.query["cursor"] as string) || 0;
+    // cursor 타입 안전하게 처리
+    const cursor = typeof req.query["cursor"] === "string"
+      ? parseInt(req.query["cursor"], 10)
+      : 0;
 
     const result = await getReviews(shopId, cursor);
     res.status(StatusCodes.OK).json({ result });

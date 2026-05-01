@@ -1,6 +1,5 @@
 import { prisma } from "../../../db.config.js";
 
-// 1. User 데이터 삽입
 export const addUser = async (data: any): Promise<number | null> => {
   try {
     // 1. 이미 존재하는 이메일인지 확인
@@ -12,7 +11,20 @@ export const addUser = async (data: any): Promise<number | null> => {
       return null;
     }
 
-    // 2. 새로운 유저 생성
+    // 2. role, gender enum 변환
+    const roleMap: Record<string, "일반_사용자" | "가게_운영자"> = {
+      "일반 사용자": "일반_사용자",
+      "가게 운영자": "가게_운영자",
+    };
+    const genderMap: Record<string, "여성" | "남성"> = {
+      "여성": "여성",
+      "남성": "남성",
+    };
+
+    const role = roleMap[data.role] ?? "일반_사용자";
+    const userGender = genderMap[data.user_gender] ?? "여성";
+
+    // 3. 새로운 유저 생성
     // [수정] 컬럼명을 새 DB 구조(user_name, nickname, user_phone 등)에 맞게 변경함
     // [수정] preferences 컬럼 추가함 (JSON 타입으로 저장)
     const result = await prisma.user.create({
@@ -20,10 +32,10 @@ export const addUser = async (data: any): Promise<number | null> => {
         userName: data.user_name,
         nickname: data.nickname,
         userPhone: data.user_phone,
-        userGender: data.user_gender,
+        userGender: userGender,
         birthData: data.birth_data,
         address: data.address,
-        role: data.role,
+        role: role,
         point: data.point,
         email: data.email,
         preferences: data.preferences,
@@ -59,7 +71,7 @@ export const getUserPreferencesByUserId = async (userId: number) => {
   return await prisma.userFoodCategory.findMany({
     where: { userId: BigInt(userId) },
     include: {
-      foodCategory: true, // 💡 핵심: JOIN 대신 include를 써서 연관 데이터를 가져옵니다!
+      foodCategory: true, // 핵심: JOIN 대신 include를 써서 연관 데이터를 가져옵니다!
     },
     orderBy: { foodCategoryId: "asc" },
   });

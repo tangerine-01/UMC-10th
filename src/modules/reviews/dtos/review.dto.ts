@@ -31,14 +31,17 @@ export const responseFromReview = (review: any, images: any[]) => {
 };
 
 export const responseFromReviews = (reviews: any[]) => {
+  const lastReview = reviews[reviews.length - 1];
   return {
-    reviewData: reviews.map((r) => ({
+    data: reviews.map((r) => ({
       review_id: r.id,
       nickname: r.nickname,
       rating: Number(r.rating),
       body: r.body,
       created_date: r.created_date,
     })),
-    cursorId: reviews.length > 0 ? reviews[reviews.length - 1].id : null,
+    pagination: {
+      cursor: lastReview ? lastReview.id : null,
+    },
   };
 };

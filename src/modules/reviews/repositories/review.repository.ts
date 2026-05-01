@@ -125,8 +125,7 @@ export const checkShopExists = async (shopId: number): Promise<boolean> => {
 
 export const getReviewsByShopId = async (
   shopId: number,
-  cursor: number,
-  limit: number = 10
+  cursor: number
 ): Promise<any[]> => {
   const conn = await pool.getConnection();
   try {
@@ -134,11 +133,10 @@ export const getReviewsByShopId = async (
       `SELECT r.id, r.rating, r.body, r.created_date, u.nickname
        FROM review r
        JOIN user u ON r.user_id = u.id
-       WHERE r.shop_id = ?
-       ${cursor ? "AND r.id < ?" : ""}
-       ORDER BY r.id DESC
-       LIMIT ?;`,
-      cursor ? [shopId, cursor, limit] : [shopId, limit]
+       WHERE r.shop_id = ? AND r.id > ?
+       ORDER BY r.id ASC
+       LIMIT 5;`,
+      [shopId, cursor]
     );
     return rows as any[];
   } finally {

@@ -36,8 +36,8 @@ export const bodyToUser = (body: UserSignUpRequest) => {
 };
 
 // responseFromUser 만들기
-export const responseFromUser = (data: { user: any; preferences: any[] }) => {
-  const preferCategory = data.preferences.map((p) => p.foodCategory.name);
+export const responseFromUser = (data: { user: any; preferences?: any[] }) => {
+  const preferCategory = data.preferences?.map((p) => p.foodCategory.name);
   return {
     userName: data.user.userName,
     nickname: data.user.nickname,

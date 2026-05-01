@@ -1,4 +1,4 @@
-import { bodyToReview, responseFromReview } from "../dtos/review.dto.js";
+import { bodyToReview, responseFromReview, responseFromReviews } from "../dtos/review.dto.js";
 import {
   addReview,
   addReviewImages,
