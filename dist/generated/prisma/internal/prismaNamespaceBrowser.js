@@ -41,7 +41,13 @@ export const AnyNull = runtime.AnyNull;
 export const ModelName = {
     User: 'User',
     FoodCategory: 'FoodCategory',
-    UserFoodCategory: 'UserFoodCategory'
+    UserFoodCategory: 'UserFoodCategory',
+    Region: 'Region',
+    Shop: 'Shop',
+    Mission: 'Mission',
+    UserMission: 'UserMission',
+    Review: 'Review',
+    ReviewImage: 'ReviewImage'
 };
 /*
  * Enums
@@ -75,6 +81,51 @@ export const UserFoodCategoryScalarFieldEnum = {
     foodCategoryId: 'foodCategoryId',
     userId: 'userId'
 };
+export const RegionScalarFieldEnum = {
+    id: 'id',
+    regionName: 'regionName'
+};
+export const ShopScalarFieldEnum = {
+    id: 'id',
+    ownerId: 'ownerId',
+    regionId: 'regionId',
+    shopName: 'shopName',
+    shopPosition: 'shopPosition',
+    shopExplain: 'shopExplain',
+    shopPhone: 'shopPhone',
+    status: 'status'
+};
+export const MissionScalarFieldEnum = {
+    id: 'id',
+    shopId: 'shopId',
+    title: 'title',
+    body: 'body',
+    point: 'point',
+    status: 'status',
+    createdDate: 'createdDate'
+};
+export const UserMissionScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    missionId: 'missionId',
+    status: 'status',
+    createdDate: 'createdDate'
+};
+export const ReviewScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    shopId: 'shopId',
+    userMissionId: 'userMissionId',
+    rating: 'rating',
+    body: 'body',
+    createdDate: 'createdDate'
+};
+export const ReviewImageScalarFieldEnum = {
+    id: 'id',
+    reviewId: 'reviewId',
+    s3Url: 's3Url',
+    s3Key: 's3Key'
+};
 export const SortOrder = {
     asc: 'asc',
     desc: 'desc'
@@ -106,5 +157,30 @@ export const UserOrderByRelevanceFieldEnum = {
 };
 export const FoodCategoryOrderByRelevanceFieldEnum = {
     name: 'name'
+};
+export const RegionOrderByRelevanceFieldEnum = {
+    regionName: 'regionName'
+};
+export const ShopOrderByRelevanceFieldEnum = {
+    shopName: 'shopName',
+    shopPosition: 'shopPosition',
+    shopExplain: 'shopExplain',
+    shopPhone: 'shopPhone',
+    status: 'status'
+};
+export const MissionOrderByRelevanceFieldEnum = {
+    title: 'title',
+    body: 'body',
+    status: 'status'
+};
+export const UserMissionOrderByRelevanceFieldEnum = {
+    status: 'status'
+};
+export const ReviewOrderByRelevanceFieldEnum = {
+    body: 'body'
+};
+export const ReviewImageOrderByRelevanceFieldEnum = {
+    s3Url: 's3Url',
+    s3Key: 's3Key'
 };
 //# sourceMappingURL=prismaNamespaceBrowser.js.map

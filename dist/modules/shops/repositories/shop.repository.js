@@ -1,39 +1,43 @@
-import { pool } from "../../../db.config.js";
+import { prisma } from "../../../db.config.js";
 export const checkRegionExists = async (regionId) => {
-    const conn = await pool.getConnection();
-    try {
-        const [rows] = await conn.query(`SELECT EXISTS(SELECT 1 FROM region WHERE id = ?) as isExist;`, [regionId]);
-        return !!rows[0]?.isExist;
-    }
-    finally {
-        conn.release();
-    }
+    const count = await prisma.region.count({ where: { id: BigInt(regionId) } });
+    return count > 0;
 };
 export const addShop = async (data) => {
-    const conn = await pool.getConnection();
     try {
-        const [result] = await conn.query(`INSERT INTO shop (owner_id, region_id, shop_name, shop_position, shop_explain, shop_phone)
-       VALUES (?, ?, ?, ?, ?, ?);`, [data.owner_id, data.region_id, data.shop_name, data.shop_position, data.shop_explain, data.shop_phone]);
-        return result.insertId;
+        const created = await prisma.shop.create({
+            data: {
+                ownerId: BigInt(data.owner_id),
+                regionId: BigInt(data.region_id),
+                shopName: data.shop_name,
+                shopPosition: data.shop_position,
+                shopExplain: data.shop_explain,
+                shopPhone: data.shop_phone,
+            },
+        });
+        return Number(created.id);
     }
     catch (err) {
         throw new Error(`가게 추가 오류: ${err}`);
     }
-    finally {
-        conn.release();
-    }
 };
 export const getShop = async (shopId) => {
-    const conn = await pool.getConnection();
-    try {
-        const [rows] = await conn.query(`SELECT s.*, r.region_name
-       FROM shop s
-       JOIN region r ON s.region_id = r.id
-       WHERE s.id = ?;`, [shopId]);
-        return rows[0] ?? null;
-    }
-    finally {
-        conn.release();
-    }
+    const shop = await prisma.shop.findUnique({
+        where: { id: BigInt(shopId) },
+        include: { region: true },
+    });
+    if (!shop)
+        return null;
+    return {
+        id: Number(shop.id),
+        owner_id: Number(shop.ownerId),
+        region_id: Number(shop.regionId),
+        region_name: shop.region.regionName,
+        shop_name: shop.shopName,
+        shop_position: shop.shopPosition,
+        shop_explain: shop.shopExplain,
+        shop_phone: shop.shopPhone,
+        status: shop.status,
+    };
 };
 //# sourceMappingURL=shop.repository.js.map

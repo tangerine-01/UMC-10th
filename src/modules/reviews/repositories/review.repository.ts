@@ -1,40 +1,26 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { pool } from "../../../db.config.js";
+import { prisma } from "../../../db.config.js";
 
 export const checkMissionCompleted = async (
   userId: number,
   shopId: number,
   userMissionId: number
 ): Promise<boolean> => {
-  const conn = await pool.getConnection();
-  try {
-    const [rows] = await conn.query<RowDataPacket[]>(
-      `SELECT EXISTS(
-        SELECT 1 FROM user_mission um
-        JOIN mission m ON um.mission_id = m.id
-        WHERE um.id = ? AND um.user_id = ? AND m.shop_id = ? AND um.status = '성공'
-      ) as isValid;`,
-      [userMissionId, userId, shopId]
-    );
-    return !!rows[0]?.isValid;
-  } finally {
-    conn.release();
-  }
+  const count = await prisma.userMission.count({
+    where: {
+      id: BigInt(userMissionId),
+      userId: BigInt(userId),
+      status: "성공",
+      mission: { shopId: BigInt(shopId) },
+    },
+  });
+  return count > 0;
 };
 
 export const checkReviewExists = async (userMissionId: number): Promise<boolean> => {
-  const conn = await pool.getConnection();
-  try {
-    const [rows] = await conn.query<RowDataPacket[]>(
-      `SELECT EXISTS(
-        SELECT 1 FROM review WHERE user_mission_id = ?
-      ) as isExist;`,
-      [userMissionId]
-    );
-    return !!rows[0]?.isExist;
-  } finally {
-    conn.release();
-  }
+  const count = await prisma.review.count({
+    where: { userMissionId: BigInt(userMissionId) },
+  });
+  return count > 0;
 };
 
 export const addReview = async (data: {
@@ -44,18 +30,19 @@ export const addReview = async (data: {
   rating: number;
   body: string;
 }): Promise<number> => {
-  const conn = await pool.getConnection();
   try {
-    const [result] = await conn.query<ResultSetHeader>(
-      `INSERT INTO review (user_id, shop_id, user_mission_id, rating, body)
-       VALUES (?, ?, ?, ?, ?);`,
-      [data.user_id, data.shop_id, data.user_mission_id, data.rating, data.body]
-    );
-    return result.insertId;
+    const created = await prisma.review.create({
+      data: {
+        userId: BigInt(data.user_id),
+        shopId: BigInt(data.shop_id),
+        userMissionId: BigInt(data.user_mission_id),
+        rating: data.rating,
+        body: data.body,
+      },
+    });
+    return Number(created.id);
   } catch (err) {
     throw new Error(`리뷰 삽입 오류: ${err}`);
-  } finally {
-    conn.release();
   }
 };
 
@@ -65,81 +52,77 @@ export const addReviewImages = async (
 ): Promise<void> => {
   if (images.length === 0) return;
 
-  const conn = await pool.getConnection();
   try {
-    const values = images.map((img) => [reviewId, img.s3_url, img.s3_key]);
-    await conn.query(
-      `INSERT INTO review_image (review_id, s3_url, s3_key) VALUES ?;`,
-      [values]
-    );
+    await prisma.reviewImage.createMany({
+      data: images.map((img) => ({
+        reviewId: BigInt(reviewId),
+        s3Url: img.s3_url,
+        s3Key: img.s3_key,
+      })),
+    });
   } catch (err) {
     throw new Error(`이미지 삽입 오류: ${err}`);
-  } finally {
-    conn.release();
   }
 };
 
 export const getReview = async (reviewId: number): Promise<any | null> => {
-  const conn = await pool.getConnection();
-  try {
-    const [rows] = await conn.query<RowDataPacket[]>(
-      `SELECT r.*, u.nickname
-       FROM review r
-       JOIN user u ON r.user_id = u.id
-       WHERE r.id = ?;`,
-      [reviewId]
-    );
-    return rows[0] ?? null;
-  } finally {
-    conn.release();
-  }
+  const review = await prisma.review.findUnique({
+    where: { id: BigInt(reviewId) },
+    include: { user: { select: { nickname: true } } },
+  });
+
+  if (!review) return null;
+
+  return {
+    id: Number(review.id),
+    shop_id: Number(review.shopId),
+    user_id: Number(review.userId),
+    user_mission_id: Number(review.userMissionId),
+    rating: review.rating,
+    body: review.body,
+    created_date: review.createdDate,
+    nickname: review.user.nickname,
+  };
 };
 
 export const getReviewImages = async (reviewId: number): Promise<any[]> => {
-  const conn = await pool.getConnection();
-  try {
-    const [rows] = await conn.query<RowDataPacket[]>(
-      `SELECT * FROM review_image WHERE review_id = ?;`,
-      [reviewId]
-    );
-    return rows as any[];
-  } finally {
-    conn.release();
-  }
+  const rows = await prisma.reviewImage.findMany({
+    where: { reviewId: BigInt(reviewId) },
+    orderBy: { id: "asc" },
+  });
+
+  return rows.map((img) => ({
+    id: Number(img.id),
+    review_id: Number(img.reviewId),
+    s3_url: img.s3Url,
+    s3_key: img.s3Key,
+  }));
 };
 
 export const checkShopExists = async (shopId: number): Promise<boolean> => {
-  const conn = await pool.getConnection();
-  try {
-    const [rows] = await conn.query<RowDataPacket[]>(
-      `SELECT EXISTS(
-        SELECT 1 FROM shop WHERE id = ?
-      ) as isExist;`,
-      [shopId]
-    );
-    return !!rows[0]?.isExist;
-  } finally {
-    conn.release();
-  }
+  const count = await prisma.shop.count({ where: { id: BigInt(shopId) } });
+  return count > 0;
 };
 
 export const getReviewsByShopId = async (
   shopId: number,
   cursor: number
 ): Promise<any[]> => {
-  const conn = await pool.getConnection();
-  try {
-    const [rows] = await conn.query<RowDataPacket[]>(
-      `SELECT r.id, r.rating, r.body, r.created_date, u.nickname
-       FROM review r
-       JOIN user u ON r.user_id = u.id
-       WHERE r.shop_id = ? AND r.id > ?
-       ORDER BY r.id ASC
-       LIMIT 5;`,
-      [shopId, cursor]
-    );
-    return rows as any[];
-  } finally {
-    conn.release();
-  }
+  const rows = await prisma.review.findMany({
+    where: {
+      shopId: BigInt(shopId),
+      ...(cursor > 0 ? { id: { gt: BigInt(cursor) } } : {}),
+    },
+    include: { user: { select: { nickname: true } } },
+    orderBy: { id: "asc" },
+    take: 5,
+  });
+
+  return rows.map((r) => ({
+    id: Number(r.id),
+    rating: r.rating,
+    body: r.body,
+    created_date: r.createdDate,
+    nickname: r.user.nickname,
+  }));
 };
