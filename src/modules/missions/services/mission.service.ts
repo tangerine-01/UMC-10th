@@ -2,6 +2,7 @@ import {
   bodyToMission,
   bodyToUserMission,
   responseFromMission,
+  responseFromMissions,
   responseFromUserMission,
 } from "../dtos/mission.dto.js";
 import {
@@ -11,6 +12,7 @@ import {
   checkShopExists,
   checkUserMissionInProgress,
   getMission,
+  getMissionsByShopId,
   getUserMission,
 } from "../repositories/mission.repository.js";
 
@@ -49,4 +51,18 @@ export const challengeMission = async (data: ReturnType<typeof bodyToUserMission
   // 4. 저장된 user_mission 반환
   const userMission = await getUserMission(userMissionId);
   return responseFromUserMission(userMission);
+};
+
+export const getMissions = async (shopId: number, cursor: number) => {
+  // 0. 가게 존재 여부 확인
+  const shopExists = await checkShopExists(shopId);
+  if (!shopExists) {
+    throw new Error("존재하지 않는 가게입니다.");
+  }
+
+  // 1. 미션 목록 조회
+  const missions = await getMissionsByShopId(shopId, cursor);
+
+  // 2. 응답 반환
+  return responseFromMissions(missions);
 };

@@ -103,3 +103,27 @@ export const getUserMission = async (userMissionId: number): Promise<any | null>
     created_date: userMission.createdDate,
   };
 };
+
+export const getMissionsByShopId = async (
+  shopId: number,
+  cursor: number
+): Promise<any[]> => {
+  const rows = await prisma.mission.findMany({
+    where: {
+      shopId: BigInt(shopId),
+      ...(cursor > 0 ? { id: { gt: BigInt(cursor) } } : {}),
+    },
+    orderBy: { id: "asc" },
+    take: 5,
+  });
+
+  return rows.map((m) => ({
+    id: Number(m.id),
+    shop_id: Number(m.shopId),
+    title: m.title,
+    body: m.body,
+    point: m.point,
+    status: m.status,
+    created_date: m.createdDate,
+  }));
+};

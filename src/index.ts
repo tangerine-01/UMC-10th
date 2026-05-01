@@ -7,7 +7,11 @@ import {
   handleGetMyReviews,
   handleGetReviews,
 } from "./modules/reviews/controllers/review.controller.js";
-import { handleCreateMission, handleChallengeMission } from "./modules/missions/controllers/mission.controller.js";
+import {
+  handleCreateMission,
+  handleChallengeMission,
+  handleGetMissions,
+} from "./modules/missions/controllers/mission.controller.js";
 import { handleCreateShop } from "./modules/shops/controllers/shop.controller.js";
 
 // 1. 환경 변수 설정
@@ -32,6 +36,7 @@ app.post("/shops/:shopId/reviews", handleCreateReview);
 app.post("/missions/challenge", handleChallengeMission);
 app.post("/regions/:regionId/shops", handleCreateShop);
 app.post("/shops/:shopId/missions", handleCreateMission);
+app.get("/shops/:shopId/missions", handleGetMissions);
 app.get("/shops/:shopId/reviews", handleGetReviews);
 app.get("/users/:userId/reviews", handleGetMyReviews);
 

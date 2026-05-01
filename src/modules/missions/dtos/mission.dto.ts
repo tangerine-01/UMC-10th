@@ -26,6 +26,24 @@ export const responseFromMission = (mission: any) => {
   };
 };
 
+export const responseFromMissions = (missions: any[]) => {
+  const lastMission = missions[missions.length - 1];
+  return {
+    data: missions.map((m) => ({
+      mission_id: m.id,
+      shop_id: m.shop_id,
+      title: m.title,
+      body: m.body,
+      point: m.point,
+      status: m.status,
+      created_date: m.created_date,
+    })),
+    pagination: {
+      cursor: lastMission ? lastMission.id : null,
+    },
+  };
+};
+
 export interface UserMissionCreateRequest {
   user_id: number;
   mission_id: number;
