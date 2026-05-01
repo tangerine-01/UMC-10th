@@ -2,16 +2,19 @@ import {
   bodyToMission,
   bodyToUserMission,
   responseFromMission,
+  responseFromInProgressMissions,
   responseFromMissions,
   responseFromUserMission,
 } from "../dtos/mission.dto.js";
 import {
   addMission,
   addUserMission,
+  checkUserExists,
   checkMissionExists,
   checkShopExists,
   checkUserMissionInProgress,
   getMission,
+  getInProgressMissionsByUserId,
   getMissionsByShopId,
   getUserMission,
 } from "../repositories/mission.repository.js";
@@ -65,4 +68,18 @@ export const getMissions = async (shopId: number, cursor: number) => {
 
   // 2. 응답 반환
   return responseFromMissions(missions);
+};
+
+export const getInProgressMissions = async (userId: number, cursor: number) => {
+  // 0. 유저 존재 여부 확인
+  const userExists = await checkUserExists(userId);
+  if (!userExists) {
+    throw new Error("존재하지 않는 유저입니다.");
+  }
+
+  // 1. 진행 중인 미션 목록 조회
+  const rows = await getInProgressMissionsByUserId(userId, cursor);
+
+  // 2. 응답 반환
+  return responseFromInProgressMissions(rows);
 };

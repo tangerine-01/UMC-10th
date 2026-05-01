@@ -65,3 +65,22 @@ export const responseFromUserMission = (userMission: any) => {
     created_date: userMission.created_date,
   };
 };
+
+export const responseFromInProgressMissions = (rows: any[]) => {
+  const lastRow = rows[rows.length - 1];
+  return {
+    data: rows.map((r) => ({
+      user_mission_id: r.user_mission_id,
+      mission_id: r.mission_id,
+      shop_id: r.shop_id,
+      title: r.title,
+      body: r.body,
+      point: r.point,
+      status: r.status,
+      created_date: r.created_date,
+    })),
+    pagination: {
+      cursor: lastRow ? lastRow.user_mission_id : null,
+    },
+  };
+};

@@ -6,7 +6,12 @@ import {
   MissionCreateRequest,
   UserMissionCreateRequest,
 } from "../dtos/mission.dto.js";
-import { challengeMission, createMission, getMissions } from "../services/mission.service.js";
+import {
+  challengeMission,
+  createMission,
+  getInProgressMissions,
+  getMissions,
+} from "../services/mission.service.js";
 
 // 가게에 미션 추가
 export const handleCreateMission = async (
@@ -67,6 +72,36 @@ export const handleGetMissions = async (
         : 0;
 
     const result = await getMissions(shopId, cursor);
+    res.status(StatusCodes.OK).json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const handleGetInProgressMissions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userIdParam = req.params["userId"];
+    if (!userIdParam) {
+      res.status(StatusCodes.BAD_REQUEST).json({ error: "유저 ID가 없습니다." });
+      return;
+    }
+
+    const userId = parseInt(userIdParam as string);
+    if (isNaN(userId)) {
+      res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 유저 ID입니다." });
+      return;
+    }
+
+    const cursor =
+      typeof req.query["cursor"] === "string"
+        ? parseInt(req.query["cursor"], 10)
+        : 0;
+
+    const result = await getInProgressMissions(userId, cursor);
     res.status(StatusCodes.OK).json({ result });
   } catch (err) {
     next(err);

@@ -1,5 +1,5 @@
-import { responseFromMission, responseFromUserMission, } from "../dtos/mission.dto.js";
-import { addMission, addUserMission, checkMissionExists, checkShopExists, checkUserMissionInProgress, getMission, getUserMission, } from "../repositories/mission.repository.js";
+import { responseFromMission, responseFromInProgressMissions, responseFromMissions, responseFromUserMission, } from "../dtos/mission.dto.js";
+import { addMission, addUserMission, checkUserExists, checkMissionExists, checkShopExists, checkUserMissionInProgress, getMission, getInProgressMissionsByUserId, getMissionsByShopId, getUserMission, } from "../repositories/mission.repository.js";
 // 가게에 미션 추가
 export const createMission = async (data) => {
     // 1. 가게 존재 여부 확인
@@ -29,5 +29,27 @@ export const challengeMission = async (data) => {
     // 4. 저장된 user_mission 반환
     const userMission = await getUserMission(userMissionId);
     return responseFromUserMission(userMission);
+};
+export const getMissions = async (shopId, cursor) => {
+    // 0. 가게 존재 여부 확인
+    const shopExists = await checkShopExists(shopId);
+    if (!shopExists) {
+        throw new Error("존재하지 않는 가게입니다.");
+    }
+    // 1. 미션 목록 조회
+    const missions = await getMissionsByShopId(shopId, cursor);
+    // 2. 응답 반환
+    return responseFromMissions(missions);
+};
+export const getInProgressMissions = async (userId, cursor) => {
+    // 0. 유저 존재 여부 확인
+    const userExists = await checkUserExists(userId);
+    if (!userExists) {
+        throw new Error("존재하지 않는 유저입니다.");
+    }
+    // 1. 진행 중인 미션 목록 조회
+    const rows = await getInProgressMissionsByUserId(userId, cursor);
+    // 2. 응답 반환
+    return responseFromInProgressMissions(rows);
 };
 //# sourceMappingURL=mission.service.js.map

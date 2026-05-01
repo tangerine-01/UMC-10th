@@ -85,4 +85,51 @@ export const getUserMission = async (userMissionId) => {
         created_date: userMission.createdDate,
     };
 };
+export const getMissionsByShopId = async (shopId, cursor) => {
+    const rows = await prisma.mission.findMany({
+        where: {
+            shopId: BigInt(shopId),
+            ...(cursor > 0 ? { id: { gt: BigInt(cursor) } } : {}),
+        },
+        orderBy: { id: "asc" },
+        take: 5,
+    });
+    return rows.map((m) => ({
+        id: Number(m.id),
+        shop_id: Number(m.shopId),
+        title: m.title,
+        body: m.body,
+        point: m.point,
+        status: m.status,
+        created_date: m.createdDate,
+    }));
+};
+export const checkUserExists = async (userId) => {
+    const count = await prisma.user.count({ where: { id: BigInt(userId) } });
+    return count > 0;
+};
+export const getInProgressMissionsByUserId = async (userId, cursor) => {
+    const rows = await prisma.userMission.findMany({
+        where: {
+            userId: BigInt(userId),
+            status: "진행중",
+            ...(cursor > 0 ? { id: { gt: BigInt(cursor) } } : {}),
+        },
+        include: {
+            mission: true,
+        },
+        orderBy: { id: "asc" },
+        take: 5,
+    });
+    return rows.map((um) => ({
+        user_mission_id: Number(um.id),
+        mission_id: Number(um.missionId),
+        shop_id: Number(um.mission.shopId),
+        title: um.mission.title,
+        body: um.mission.body,
+        point: um.mission.point,
+        status: um.status,
+        created_date: um.createdDate,
+    }));
+};
 //# sourceMappingURL=mission.repository.js.map

@@ -17,6 +17,23 @@ export const responseFromMission = (mission) => {
         created_date: mission.created_date,
     };
 };
+export const responseFromMissions = (missions) => {
+    const lastMission = missions[missions.length - 1];
+    return {
+        data: missions.map((m) => ({
+            mission_id: m.id,
+            shop_id: m.shop_id,
+            title: m.title,
+            body: m.body,
+            point: m.point,
+            status: m.status,
+            created_date: m.created_date,
+        })),
+        pagination: {
+            cursor: lastMission ? lastMission.id : null,
+        },
+    };
+};
 export const bodyToUserMission = (body) => {
     return {
         user_id: body.user_id,
@@ -30,6 +47,24 @@ export const responseFromUserMission = (userMission) => {
         mission_id: userMission.mission_id,
         status: userMission.status,
         created_date: userMission.created_date,
+    };
+};
+export const responseFromInProgressMissions = (rows) => {
+    const lastRow = rows[rows.length - 1];
+    return {
+        data: rows.map((r) => ({
+            user_mission_id: r.user_mission_id,
+            mission_id: r.mission_id,
+            shop_id: r.shop_id,
+            title: r.title,
+            body: r.body,
+            point: r.point,
+            status: r.status,
+            created_date: r.created_date,
+        })),
+        pagination: {
+            cursor: lastRow ? lastRow.user_mission_id : null,
+        },
     };
 };
 //# sourceMappingURL=mission.dto.js.map

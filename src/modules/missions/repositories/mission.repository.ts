@@ -127,3 +127,37 @@ export const getMissionsByShopId = async (
     created_date: m.createdDate,
   }));
 };
+
+export const checkUserExists = async (userId: number): Promise<boolean> => {
+  const count = await prisma.user.count({ where: { id: BigInt(userId) } });
+  return count > 0;
+};
+
+export const getInProgressMissionsByUserId = async (
+  userId: number,
+  cursor: number
+): Promise<any[]> => {
+  const rows = await prisma.userMission.findMany({
+    where: {
+      userId: BigInt(userId),
+      status: "진행중",
+      ...(cursor > 0 ? { id: { gt: BigInt(cursor) } } : {}),
+    },
+    include: {
+      mission: true,
+    },
+    orderBy: { id: "asc" },
+    take: 5,
+  });
+
+  return rows.map((um) => ({
+    user_mission_id: Number(um.id),
+    mission_id: Number(um.missionId),
+    shop_id: Number(um.mission.shopId),
+    title: um.mission.title,
+    body: um.mission.body,
+    point: um.mission.point,
+    status: um.status,
+    created_date: um.createdDate,
+  }));
+};
