@@ -104,6 +104,46 @@ export const getUserMission = async (userMissionId: number): Promise<any | null>
   };
 };
 
+export const getUserMissionByIdAndUserId = async (
+  userId: number,
+  userMissionId: number
+): Promise<any | null> => {
+  const row = await prisma.userMission.findFirst({
+    where: {
+      id: BigInt(userMissionId),
+      userId: BigInt(userId),
+    },
+  });
+
+  if (!row) return null;
+
+  return {
+    id: Number(row.id),
+    user_id: Number(row.userId),
+    mission_id: Number(row.missionId),
+    status: row.status,
+    created_date: row.createdDate,
+  };
+};
+
+export const completeUserMission = async (
+  userId: number,
+  userMissionId: number
+): Promise<any> => {
+  const updated = await prisma.userMission.update({
+    where: { id: BigInt(userMissionId) },
+    data: { status: "성공" },
+  });
+
+  return {
+    id: Number(updated.id),
+    user_id: Number(updated.userId),
+    mission_id: Number(updated.missionId),
+    status: updated.status,
+    created_date: updated.createdDate,
+  };
+};
+
 export const getMissionsByShopId = async (
   shopId: number,
   cursor: number

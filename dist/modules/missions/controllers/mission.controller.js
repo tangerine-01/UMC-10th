@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { bodyToMission, bodyToUserMission, } from "../dtos/mission.dto.js";
-import { challengeMission, createMission, getInProgressMissions, getMissions, } from "../services/mission.service.js";
+import { challengeMission, completeInProgressMission, createMission, getInProgressMissions, getMissions, } from "../services/mission.service.js";
 // 가게에 미션 추가
 export const handleCreateMission = async (req, res, next) => {
     try {
@@ -66,6 +66,27 @@ export const handleGetInProgressMissions = async (req, res, next) => {
             ? parseInt(req.query["cursor"], 10)
             : 0;
         const result = await getInProgressMissions(userId, cursor);
+        res.status(StatusCodes.OK).json({ result });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+export const handleCompleteInProgressMission = async (req, res, next) => {
+    try {
+        const userIdParam = req.params["userId"];
+        const userMissionIdParam = req.params["userMissionId"];
+        if (!userIdParam || !userMissionIdParam) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: "유저 ID 또는 유저 미션 ID가 없습니다." });
+            return;
+        }
+        const userId = parseInt(userIdParam);
+        const userMissionId = parseInt(userMissionIdParam);
+        if (isNaN(userId) || isNaN(userMissionId)) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 ID입니다." });
+            return;
+        }
+        const result = await completeInProgressMission(userId, userMissionId);
         res.status(StatusCodes.OK).json({ result });
     }
     catch (err) {

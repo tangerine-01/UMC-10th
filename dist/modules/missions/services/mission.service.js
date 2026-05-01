@@ -1,5 +1,5 @@
 import { responseFromMission, responseFromInProgressMissions, responseFromMissions, responseFromUserMission, } from "../dtos/mission.dto.js";
-import { addMission, addUserMission, checkUserExists, checkMissionExists, checkShopExists, checkUserMissionInProgress, getMission, getInProgressMissionsByUserId, getMissionsByShopId, getUserMission, } from "../repositories/mission.repository.js";
+import { addMission, addUserMission, checkUserExists, checkMissionExists, checkShopExists, checkUserMissionInProgress, completeUserMission, getMission, getInProgressMissionsByUserId, getMissionsByShopId, getUserMissionByIdAndUserId, getUserMission, } from "../repositories/mission.repository.js";
 // 가게에 미션 추가
 export const createMission = async (data) => {
     // 1. 가게 존재 여부 확인
@@ -51,5 +51,27 @@ export const getInProgressMissions = async (userId, cursor) => {
     const rows = await getInProgressMissionsByUserId(userId, cursor);
     // 2. 응답 반환
     return responseFromInProgressMissions(rows);
+};
+export const completeInProgressMission = async (userId, userMissionId) => {
+    // 0. 유저 존재 여부 확인
+    const userExists = await checkUserExists(userId);
+    if (!userExists) {
+        throw new Error("존재하지 않는 유저입니다.");
+    }
+    // 1. 해당 유저의 user_mission인지 확인
+    const userMission = await getUserMissionByIdAndUserId(userId, userMissionId);
+    if (!userMission) {
+        throw new Error("존재하지 않는 유저 미션입니다.");
+    }
+    // 2. 진행중 상태인지 확인 (이미 성공이면 그대로 반환)
+    if (userMission.status === "성공") {
+        return responseFromUserMission(userMission);
+    }
+    if (userMission.status !== "진행중") {
+        throw new Error("진행 중인 미션만 완료 처리할 수 있습니다.");
+    }
+    // 3. 완료 처리(성공)
+    const updated = await completeUserMission(userId, userMissionId);
+    return responseFromUserMission(updated);
 };
 //# sourceMappingURL=mission.service.js.map

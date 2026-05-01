@@ -10,6 +10,7 @@ import {
 import {
   handleCreateMission,
   handleChallengeMission,
+  handleCompleteInProgressMission,
   handleGetInProgressMissions,
   handleGetMissions,
 } from "./modules/missions/controllers/mission.controller.js";
@@ -39,6 +40,7 @@ app.post("/regions/:regionId/shops", handleCreateShop);
 app.post("/shops/:shopId/missions", handleCreateMission);
 app.get("/shops/:shopId/missions", handleGetMissions);
 app.get("/users/:userId/missions/in-progress", handleGetInProgressMissions);
+app.patch("/users/:userId/missions/:userMissionId/complete", handleCompleteInProgressMission);
 app.get("/shops/:shopId/reviews", handleGetReviews);
 app.get("/users/:userId/reviews", handleGetMyReviews);
 
