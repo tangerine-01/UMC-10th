@@ -35,4 +35,20 @@ export const responseFromReviews = (reviews) => {
         },
     };
 };
+export const responseFromMyReviews = (reviews) => {
+    const lastReview = reviews[reviews.length - 1];
+    return {
+        data: reviews.map((r) => ({
+            review_id: r.id,
+            shop_id: r.shop_id,
+            shop_name: r.shop_name,
+            rating: Number(r.rating),
+            body: r.body,
+            created_date: r.created_date,
+        })),
+        pagination: {
+            cursor: lastReview ? lastReview.id : null,
+        },
+    };
+};
 //# sourceMappingURL=review.dto.js.map

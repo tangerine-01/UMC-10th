@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
-import { handleCreateReview, handleGetReviews } from "./modules/reviews/controllers/review.controller.js";
+import { handleCreateReview, handleGetMyReviews, handleGetReviews, } from "./modules/reviews/controllers/review.controller.js";
 import { handleCreateMission, handleChallengeMission } from "./modules/missions/controllers/mission.controller.js";
 import { handleCreateShop } from "./modules/shops/controllers/shop.controller.js";
 // 1. 환경 변수 설정
@@ -24,6 +24,7 @@ app.post("/missions/challenge", handleChallengeMission);
 app.post("/regions/:regionId/shops", handleCreateShop);
 app.post("/shops/:shopId/missions", handleCreateMission);
 app.get("/shops/:shopId/reviews", handleGetReviews);
+app.get("/users/:userId/reviews", handleGetMyReviews);
 // 전역 에러 핸들러
 app.use((err, req, res, next) => {
     console.error(err.message);

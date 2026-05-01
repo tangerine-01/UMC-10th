@@ -101,4 +101,29 @@ export const getReviewsByShopId = async (shopId, cursor) => {
         nickname: r.user.nickname,
     }));
 };
+export const checkUserExists = async (userId) => {
+    const count = await prisma.user.count({ where: { id: BigInt(userId) } });
+    return count > 0;
+};
+export const getReviewsByUserId = async (userId, cursor) => {
+    const rows = await prisma.review.findMany({
+        where: {
+            userId: BigInt(userId),
+            ...(cursor > 0 ? { id: { gt: BigInt(cursor) } } : {}),
+        },
+        include: {
+            shop: { select: { shopName: true } },
+        },
+        orderBy: { id: "asc" },
+        take: 5,
+    });
+    return rows.map((r) => ({
+        id: Number(r.id),
+        shop_id: Number(r.shopId),
+        shop_name: r.shop.shopName,
+        rating: r.rating,
+        body: r.body,
+        created_date: r.createdDate,
+    }));
+};
 //# sourceMappingURL=review.repository.js.map

@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { bodyToReview } from "../dtos/review.dto.js";
-import { createReview, getReviews } from "../services/review.service.js";
+import { createReview, getMyReviews, getReviews } from "../services/review.service.js";
 export const handleCreateReview = async (req, res, next) => {
     try {
         const shopIdParam = req.params["shopId"];
@@ -42,6 +42,28 @@ export const handleGetReviews = async (req, res, next) => {
             ? parseInt(req.query["cursor"], 10)
             : 0;
         const result = await getReviews(shopId, cursor);
+        res.status(StatusCodes.OK).json({ result });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+export const handleGetMyReviews = async (req, res, next) => {
+    try {
+        const userIdParam = req.params["userId"];
+        if (!userIdParam) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: "유저 ID가 없습니다." });
+            return;
+        }
+        const userId = parseInt(userIdParam);
+        if (isNaN(userId)) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 유저 ID입니다." });
+            return;
+        }
+        const cursor = typeof req.query["cursor"] === "string"
+            ? parseInt(req.query["cursor"], 10)
+            : 0;
+        const result = await getMyReviews(userId, cursor);
         res.status(StatusCodes.OK).json({ result });
     }
     catch (err) {

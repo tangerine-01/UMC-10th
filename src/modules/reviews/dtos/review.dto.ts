@@ -45,3 +45,20 @@ export const responseFromReviews = (reviews: any[]) => {
     },
   };
 };
+
+export const responseFromMyReviews = (reviews: any[]) => {
+  const lastReview = reviews[reviews.length - 1];
+  return {
+    data: reviews.map((r) => ({
+      review_id: r.id,
+      shop_id: r.shop_id,
+      shop_name: r.shop_name,
+      rating: Number(r.rating),
+      body: r.body,
+      created_date: r.created_date,
+    })),
+    pagination: {
+      cursor: lastReview ? lastReview.id : null,
+    },
+  };
+};

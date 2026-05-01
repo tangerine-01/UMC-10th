@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { bodyToReview, ReviewCreateRequest } from "../dtos/review.dto.js";
-import { createReview, getReviews } from "../services/review.service.js";
+import { createReview, getMyReviews, getReviews } from "../services/review.service.js";
 
 export const handleCreateReview = async (
   req: Request,
@@ -59,6 +59,36 @@ export const handleGetReviews = async (
       : 0;
 
     const result = await getReviews(shopId, cursor);
+    res.status(StatusCodes.OK).json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const handleGetMyReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userIdParam = req.params["userId"];
+    if (!userIdParam) {
+      res.status(StatusCodes.BAD_REQUEST).json({ error: "유저 ID가 없습니다." });
+      return;
+    }
+
+    const userId = parseInt(userIdParam as string);
+    if (isNaN(userId)) {
+      res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 유저 ID입니다." });
+      return;
+    }
+
+    const cursor =
+      typeof req.query["cursor"] === "string"
+        ? parseInt(req.query["cursor"], 10)
+        : 0;
+
+    const result = await getMyReviews(userId, cursor);
     res.status(StatusCodes.OK).json({ result });
   } catch (err) {
     next(err);

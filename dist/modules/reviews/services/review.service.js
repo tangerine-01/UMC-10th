@@ -1,5 +1,5 @@
-import { responseFromReview, responseFromReviews } from "../dtos/review.dto.js";
-import { addReview, addReviewImages, checkMissionCompleted, checkReviewExists, checkShopExists, getReview, getReviewImages, getReviewsByShopId, } from "../repositories/review.repository.js";
+import { responseFromMyReviews, responseFromReview, responseFromReviews, } from "../dtos/review.dto.js";
+import { addReview, addReviewImages, checkMissionCompleted, checkReviewExists, checkShopExists, checkUserExists, getReview, getReviewImages, getReviewsByShopId, getReviewsByUserId, } from "../repositories/review.repository.js";
 export const createReview = async (data, imageFiles) => {
     // 0. 가게 존재 여부 확인 ← 추가
     const shopExists = await checkShopExists(data.shop_id);
@@ -41,5 +41,16 @@ export const getReviews = async (shopId, cursor) => {
     const reviews = await getReviewsByShopId(shopId, cursor);
     // 2. 응답 반환
     return responseFromReviews(reviews);
+};
+export const getMyReviews = async (userId, cursor) => {
+    // 0. 유저 존재 여부 확인
+    const userExists = await checkUserExists(userId);
+    if (!userExists) {
+        throw new Error("존재하지 않는 유저입니다.");
+    }
+    // 1. 내가 작성한 리뷰 목록 조회
+    const reviews = await getReviewsByUserId(userId, cursor);
+    // 2. 응답 반환
+    return responseFromMyReviews(reviews);
 };
 //# sourceMappingURL=review.service.js.map
