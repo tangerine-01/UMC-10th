@@ -7,6 +7,18 @@ export interface ShopCreateRequest {
   shop_phone?: string;
 }
 
+export interface ShopResponse {
+  shop_id: number;
+  owner_id: number;
+  region_id: number;
+  region_name: string;
+  shop_name: string;
+  shop_position: string;
+  shop_explain: string | null;
+  shop_phone: string | null;
+  status: string | null;
+}
+
 export const bodyToShop = (body: ShopCreateRequest) => {
   return {
     owner_id: body.owner_id,

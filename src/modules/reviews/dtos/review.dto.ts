@@ -6,6 +6,40 @@ export interface ReviewCreateRequest {
   image_urls?: string[];
 }
 
+export interface ReviewCreateResponse {
+  review_id: number;
+  shop_id: number;
+  user_id: number;
+  nickname: string;
+  rating: number;
+  body: string;
+  image_urls: string[];
+  created_date: Date;
+}
+
+export interface ReviewsListResponse {
+  data: Array<{
+    review_id: number;
+    nickname: string;
+    rating: number;
+    body: string;
+    created_date: Date;
+  }>;
+  pagination: { cursor: number | null };
+}
+
+export interface MyReviewsListResponse {
+  data: Array<{
+    review_id: number;
+    shop_id: number;
+    shop_name: string;
+    rating: number;
+    body: string;
+    created_date: Date;
+  }>;
+  pagination: { cursor: number | null };
+}
+
 export const bodyToReview = (body: ReviewCreateRequest, shopId: number) => {
   return {
     user_id: body.user_id,

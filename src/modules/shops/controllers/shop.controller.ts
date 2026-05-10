@@ -1,18 +1,18 @@
-import { Request, Response, NextFunction } from "express";
-import { StatusCodes } from "http-status-codes";
-import { bodyToShop, ShopCreateRequest } from "../dtos/shop.dto.js";
+import { Body, Controller, Path, Post, Route, Tags } from "tsoa";
+import { ApiResponse, success } from "../../../common/responses/response.js";
+import { bodyToShop, ShopCreateRequest, ShopResponse } from "../dtos/shop.dto.js";
 import { createShop } from "../services/shop.service.js";
 
-export const handleCreateShop = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const data = bodyToShop(req.body as ShopCreateRequest);
+@Route("regions")
+@Tags("Shops")
+export class ShopController extends Controller {
+  @Post("{regionId}/shops")
+  public async handleCreateShop(
+    @Path() regionId: number,
+    @Body() body: ShopCreateRequest,
+  ): Promise<ApiResponse<ShopResponse>> {
+    const data = bodyToShop({ ...body, region_id: regionId });
     const shop = await createShop(data);
-    res.status(StatusCodes.OK).json({ result: shop });
-  } catch (err) {
-    next(err);
+    return success(shop);
   }
-};
+}

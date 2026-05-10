@@ -119,6 +119,767 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ShopResponse": {
+				"properties": {
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"owner_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"region_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"region_name": {
+						"type": "string"
+					},
+					"shop_name": {
+						"type": "string"
+					},
+					"shop_position": {
+						"type": "string"
+					},
+					"shop_explain": {
+						"type": "string",
+						"nullable": true
+					},
+					"shop_phone": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"shop_id",
+					"owner_id",
+					"region_id",
+					"region_name",
+					"shop_name",
+					"shop_position",
+					"shop_explain",
+					"shop_phone",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ShopResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ShopResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShopCreateRequest": {
+				"properties": {
+					"owner_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"region_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"shop_name": {
+						"type": "string"
+					},
+					"shop_position": {
+						"type": "string"
+					},
+					"shop_explain": {
+						"type": "string"
+					},
+					"shop_phone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"owner_id",
+					"region_id",
+					"shop_name",
+					"shop_position"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReviewCreateResponse": {
+				"properties": {
+					"review_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"nickname": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"body": {
+						"type": "string"
+					},
+					"image_urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"created_date": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"review_id",
+					"shop_id",
+					"user_id",
+					"nickname",
+					"rating",
+					"body",
+					"image_urls",
+					"created_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ReviewCreateResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ReviewCreateResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReviewCreateRequest": {
+				"properties": {
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"user_mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"body": {
+						"type": "string"
+					},
+					"image_urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"user_id",
+					"user_mission_id",
+					"rating",
+					"body"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReviewsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"body": {
+									"type": "string"
+								},
+								"rating": {
+									"type": "number",
+									"format": "double"
+								},
+								"nickname": {
+									"type": "string"
+								},
+								"review_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"body",
+								"rating",
+								"nickname",
+								"review_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ReviewsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ReviewsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MyReviewsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"body": {
+									"type": "string"
+								},
+								"rating": {
+									"type": "number",
+									"format": "double"
+								},
+								"shop_name": {
+									"type": "string"
+								},
+								"shop_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"review_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"body",
+								"rating",
+								"shop_name",
+								"shop_id",
+								"review_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MyReviewsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/MyReviewsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionResponse": {
+				"properties": {
+					"mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"point": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_date": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"mission_id",
+					"shop_id",
+					"title",
+					"body",
+					"point",
+					"status",
+					"created_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MissionResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/MissionResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionCreateRequest": {
+				"properties": {
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"point": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"shop_id",
+					"title",
+					"body",
+					"point"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time",
+									"nullable": true
+								},
+								"status": {
+									"type": "string",
+									"nullable": true
+								},
+								"point": {
+									"type": "number",
+									"format": "double"
+								},
+								"body": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"shop_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"mission_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"status",
+								"point",
+								"body",
+								"title",
+								"shop_id",
+								"mission_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MissionsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/MissionsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserMissionResponse": {
+				"properties": {
+					"user_mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_date": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"user_mission_id",
+					"user_id",
+					"mission_id",
+					"status",
+					"created_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_UserMissionResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserMissionResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserMissionCreateRequest": {
+				"properties": {
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"mission_id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"user_id",
+					"mission_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InProgressMissionsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time",
+									"nullable": true
+								},
+								"status": {
+									"type": "string"
+								},
+								"point": {
+									"type": "number",
+									"format": "double"
+								},
+								"body": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"shop_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"mission_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"user_mission_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"status",
+								"point",
+								"body",
+								"title",
+								"shop_id",
+								"mission_id",
+								"user_mission_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_InProgressMissionsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/InProgressMissionsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -273,6 +1034,369 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/regions/{regionId}/shops": {
+			"post": {
+				"operationId": "HandleCreateShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ShopResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Shops"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "regionId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ShopCreateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shops/{shopId}/reviews": {
+			"post": {
+				"operationId": "HandleCreateReview",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ReviewCreateResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Reviews"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReviewCreateRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "HandleGetReviews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ReviewsListResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Reviews"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/users/{userId}/reviews": {
+			"get": {
+				"operationId": "HandleGetMyReviews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MyReviewsListResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Reviews"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/missions": {
+			"post": {
+				"operationId": "HandleCreateMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MissionResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MissionCreateRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "HandleGetMissions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MissionsListResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/missions/challenge": {
+			"post": {
+				"operationId": "HandleChallengeMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UserMissionResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserMissionCreateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{userId}/missions/in-progress": {
+			"get": {
+				"operationId": "HandleGetInProgressMissions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_InProgressMissionsListResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/users/{userId}/missions/{userMissionId}/complete": {
+			"patch": {
+				"operationId": "HandleCompleteInProgressMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UserMissionResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "path",
+						"name": "userMissionId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		}
 	},

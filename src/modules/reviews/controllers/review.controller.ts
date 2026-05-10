@@ -1,96 +1,50 @@
-import { Request, Response, NextFunction } from "express";
-import { StatusCodes } from "http-status-codes";
-import { bodyToReview, ReviewCreateRequest } from "../dtos/review.dto.js";
+import { Body, Controller, Get, Path, Post, Query, Route, Tags } from "tsoa";
+import { ApiResponse, success } from "../../../common/responses/response.js";
+import {
+  bodyToReview,
+  MyReviewsListResponse,
+  ReviewCreateRequest,
+  ReviewCreateResponse,
+  ReviewsListResponse,
+} from "../dtos/review.dto.js";
 import { createReview, getMyReviews, getReviews } from "../services/review.service.js";
 
-export const handleCreateReview = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const shopIdParam = req.params["shopId"];
-    if (!shopIdParam) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "가게 ID가 없습니다." });
-      return;
-    }
-    const shopId = parseInt(shopIdParam as string);
-
-    if (isNaN(shopId)) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 가게 ID입니다." });
-      return;
-    }
-
-    const data = bodyToReview(req.body as ReviewCreateRequest, shopId);
-
-    const imageFiles = (req.body.image_urls ?? []).map((url: string) => ({
+@Route("shops")
+@Tags("Reviews")
+export class ReviewController extends Controller {
+  @Post("{shopId}/reviews")
+  public async handleCreateReview(
+    @Path() shopId: number,
+    @Body() body: ReviewCreateRequest,
+  ): Promise<ApiResponse<ReviewCreateResponse>> {
+    const data = bodyToReview(body, shopId);
+    const imageFiles = (body.image_urls ?? []).map((url: string) => ({
       s3_url: url,
       s3_key: url.split("/").pop() ?? url,
     }));
-
     const review = await createReview(data, imageFiles);
-    res.status(StatusCodes.OK).json({ result: review });
-  } catch (err) {
-    next(err);
+    return success(review);
   }
-};
 
-export const handleGetReviews = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const shopIdParam = req.params["shopId"];
-    if (!shopIdParam) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "가게 ID가 없습니다." });
-      return;
-    }
-
-    const shopId = parseInt(shopIdParam as string);
-    if (isNaN(shopId)) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 가게 ID입니다." });
-      return;
-    }
-
-    // cursor 타입 안전하게 처리
-    const cursor = typeof req.query["cursor"] === "string"
-      ? parseInt(req.query["cursor"], 10)
-      : 0;
-
+  @Get("{shopId}/reviews")
+  public async handleGetReviews(
+    @Path() shopId: number,
+    @Query() cursor: number = 0,
+  ): Promise<ApiResponse<ReviewsListResponse>> {
     const result = await getReviews(shopId, cursor);
-    res.status(StatusCodes.OK).json({ result });
-  } catch (err) {
-    next(err);
+    return success(result);
   }
-};
+}
 
-export const handleGetMyReviews = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const userIdParam = req.params["userId"];
-    if (!userIdParam) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "유저 ID가 없습니다." });
-      return;
-    }
-
-    const userId = parseInt(userIdParam as string);
-    if (isNaN(userId)) {
-      res.status(StatusCodes.BAD_REQUEST).json({ error: "유효하지 않은 유저 ID입니다." });
-      return;
-    }
-
-    const cursor =
-      typeof req.query["cursor"] === "string"
-        ? parseInt(req.query["cursor"], 10)
-        : 0;
-
+@Route("users")
+@Tags("Reviews")
+export class UserReviewController extends Controller {
+  @Get("{userId}/reviews")
+  public async handleGetMyReviews(
+    @Path() userId: number,
+    @Query() cursor: number = 0,
+  ): Promise<ApiResponse<MyReviewsListResponse>> {
     const result = await getMyReviews(userId, cursor);
-    res.status(StatusCodes.OK).json({ result });
-  } catch (err) {
-    next(err);
+    return success(result);
   }
-};
+}

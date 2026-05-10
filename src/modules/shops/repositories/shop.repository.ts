@@ -1,4 +1,5 @@
 import { prisma } from "../../../db.config.js";
+import { InternalServerError } from "../../../common/errors/error.js";
 
 export const checkRegionExists = async (regionId: number): Promise<boolean> => {
   const count = await prisma.region.count({ where: { id: BigInt(regionId) } });
@@ -26,7 +27,10 @@ export const addShop = async (data: {
     });
     return Number(created.id);
   } catch (err) {
-    throw new Error(`가게 추가 오류: ${err}`);
+    throw new InternalServerError("가게 생성 중 오류가 발생했습니다.", {
+      data,
+      cause: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 

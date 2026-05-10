@@ -4,6 +4,7 @@ import {
   responseFromReview,
   responseFromReviews,
 } from "../dtos/review.dto.js";
+import { ConflictError, NotFoundError, ValidationError } from "../../../common/errors/error.js";
 import {
   addReview,
   addReviewImages,
@@ -24,7 +25,7 @@ export const createReview = async (
   // 0. 가게 존재 여부 확인 ← 추가
   const shopExists = await checkShopExists(data.shop_id);
   if (!shopExists) {
-    throw new Error("존재하지 않는 가게입니다.");
+    throw new NotFoundError("존재하지 않는 가게입니다.", { shopId: data.shop_id });
   }
 
   // 1. 별점 유효성 검사
@@ -33,7 +34,7 @@ export const createReview = async (
     data.rating > 5.0 ||
     Math.round(data.rating * 2) !== data.rating * 2
   ) {
-    throw new Error("별점은 1.0~5.0 사이의 0.5 단위 숫자여야 합니다.");
+    throw new ValidationError("별점은 1.0~5.0 사이의 0.5 단위 숫자여야 합니다.", { rating: data.rating });
   }
 
   // 2. 미션 성공 여부 확인
@@ -43,13 +44,17 @@ export const createReview = async (
     data.user_mission_id
   );
   if (!isValid) {
-    throw new Error("미션을 성공한 유저만 리뷰를 작성할 수 있습니다.");
+    throw new ValidationError("미션을 성공한 유저만 리뷰를 작성할 수 있습니다.", {
+      userId: data.user_id,
+      shopId: data.shop_id,
+      userMissionId: data.user_mission_id,
+    });
   }
 
   // 3. 중복 리뷰 확인
   const alreadyExists = await checkReviewExists(data.user_mission_id);
   if (alreadyExists) {
-    throw new Error("이미 해당 미션에 대한 리뷰가 존재합니다.");
+    throw new ConflictError("이미 해당 미션에 대한 리뷰가 존재합니다.", { userMissionId: data.user_mission_id });
   }
 
   // 4. 리뷰 삽입
@@ -69,7 +74,7 @@ export const getReviews = async (shopId: number, cursor: number) => {
   // 0. 가게 존재 여부 확인
   const shopExists = await checkShopExists(shopId);
   if (!shopExists) {
-    throw new Error("존재하지 않는 가게입니다.");
+    throw new NotFoundError("존재하지 않는 가게입니다.", { shopId });
   }
 
   // 1. 리뷰 목록 조회
@@ -83,7 +88,7 @@ export const getMyReviews = async (userId: number, cursor: number) => {
   // 0. 유저 존재 여부 확인
   const userExists = await checkUserExists(userId);
   if (!userExists) {
-    throw new Error("존재하지 않는 유저입니다.");
+    throw new NotFoundError("존재하지 않는 유저입니다.", { userId });
   }
 
   // 1. 내가 작성한 리뷰 목록 조회

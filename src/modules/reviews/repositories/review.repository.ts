@@ -1,4 +1,5 @@
 import { prisma } from "../../../db.config.js";
+import { InternalServerError } from "../../../common/errors/error.js";
 
 export const checkMissionCompleted = async (
   userId: number,
@@ -42,7 +43,10 @@ export const addReview = async (data: {
     });
     return Number(created.id);
   } catch (err) {
-    throw new Error(`리뷰 삽입 오류: ${err}`);
+    throw new InternalServerError("리뷰 삽입 중 오류가 발생했습니다.", {
+      data,
+      cause: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 
@@ -61,7 +65,11 @@ export const addReviewImages = async (
       })),
     });
   } catch (err) {
-    throw new Error(`이미지 삽입 오류: ${err}`);
+    throw new InternalServerError("리뷰 이미지 삽입 중 오류가 발생했습니다.", {
+      reviewId,
+      imageCount: images.length,
+      cause: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 

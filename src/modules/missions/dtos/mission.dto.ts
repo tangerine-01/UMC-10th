@@ -5,6 +5,29 @@ export interface MissionCreateRequest {
   point: number;
 }
 
+export interface MissionResponse {
+  mission_id: number;
+  shop_id: number;
+  title: string;
+  body: string;
+  point: number;
+  status: string | null;
+  created_date: Date | null;
+}
+
+export interface MissionsListResponse {
+  data: Array<{
+    mission_id: number;
+    shop_id: number;
+    title: string;
+    body: string;
+    point: number;
+    status: string | null;
+    created_date: Date | null;
+  }>;
+  pagination: { cursor: number | null };
+}
+
 export const bodyToMission = (body: MissionCreateRequest, shopId: number) => {
   return {
     shop_id: shopId,
@@ -47,6 +70,28 @@ export const responseFromMissions = (missions: any[]) => {
 export interface UserMissionCreateRequest {
   user_id: number;
   mission_id: number;
+}
+
+export interface UserMissionResponse {
+  user_mission_id: number;
+  user_id: number;
+  mission_id: number;
+  status: string;
+  created_date: Date | null;
+}
+
+export interface InProgressMissionsListResponse {
+  data: Array<{
+    user_mission_id: number;
+    mission_id: number;
+    shop_id: number;
+    title: string;
+    body: string;
+    point: number;
+    status: string;
+    created_date: Date | null;
+  }>;
+  pagination: { cursor: number | null };
 }
 
 export const bodyToUserMission = (body: UserMissionCreateRequest) => {

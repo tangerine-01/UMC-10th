@@ -1,4 +1,5 @@
 import { prisma } from "../../../db.config.js";
+import { InternalServerError } from "../../../common/errors/error.js";
 
 // 가게 존재 여부 확인
 export const checkShopExists = async (shopId: number): Promise<boolean> => {
@@ -24,7 +25,10 @@ export const addMission = async (data: {
     });
     return Number(created.id);
   } catch (err) {
-    throw new Error(`미션 추가 오류: ${err}`);
+    throw new InternalServerError("미션 추가 중 오류가 발생했습니다.", {
+      data,
+      cause: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 
@@ -83,7 +87,10 @@ export const addUserMission = async (data: {
     });
     return Number(created.id);
   } catch (err) {
-    throw new Error(`미션 도전 오류: ${err}`);
+    throw new InternalServerError("미션 도전 중 오류가 발생했습니다.", {
+      data,
+      cause: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 

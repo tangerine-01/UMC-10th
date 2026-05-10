@@ -1,4 +1,5 @@
 import { prisma } from "../../../db.config.js";
+import { InternalServerError } from "../../../common/errors/error.js";
 
 export const addUser = async (data: any): Promise<number | null> => {
   try {
@@ -45,7 +46,10 @@ export const addUser = async (data: any): Promise<number | null> => {
 
     return Number(result.id);
   } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
+    throw new InternalServerError("유저 생성 중 오류가 발생했습니다.", {
+      email: data?.email,
+      cause: err instanceof Error ? err.message : String(err),
+    });
   }
 };
 

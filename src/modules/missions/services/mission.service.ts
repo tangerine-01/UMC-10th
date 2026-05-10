@@ -6,6 +6,7 @@ import {
   responseFromMissions,
   responseFromUserMission,
 } from "../dtos/mission.dto.js";
+import { ConflictError, NotFoundError, ValidationError } from "../../../common/errors/error.js";
 import {
   addMission,
   addUserMission,
@@ -26,7 +27,7 @@ export const createMission = async (data: ReturnType<typeof bodyToMission>) => {
   // 1. 가게 존재 여부 확인
   const shopExists = await checkShopExists(data.shop_id);
   if (!shopExists) {
-    throw new Error("존재하지 않는 가게입니다.");
+    throw new NotFoundError("존재하지 않는 가게입니다.", { shopId: data.shop_id });
   }
 
   // 2. 미션 삽입
@@ -41,13 +42,13 @@ export const challengeMission = async (data: ReturnType<typeof bodyToUserMission
   // 1. 미션 존재 여부 확인
   const missionExists = await checkMissionExists(data.mission_id);
   if (!missionExists) {
-    throw new Error("존재하지 않는 미션입니다.");
+    throw new NotFoundError("존재하지 않는 미션입니다.", { missionId: data.mission_id });
   }
 
   // 2. 이미 도전 중인지 확인
   const isInProgress = await checkUserMissionInProgress(data.user_id, data.mission_id);
   if (isInProgress) {
-    throw new Error("이미 도전 중인 미션입니다.");
+    throw new ConflictError("이미 도전 중인 미션입니다.", { userId: data.user_id, missionId: data.mission_id });
   }
 
   // 3. user_mission 삽입
@@ -62,7 +63,7 @@ export const getMissions = async (shopId: number, cursor: number) => {
   // 0. 가게 존재 여부 확인
   const shopExists = await checkShopExists(shopId);
   if (!shopExists) {
-    throw new Error("존재하지 않는 가게입니다.");
+    throw new NotFoundError("존재하지 않는 가게입니다.", { shopId });
   }
 
   // 1. 미션 목록 조회
@@ -76,7 +77,7 @@ export const getInProgressMissions = async (userId: number, cursor: number) => {
   // 0. 유저 존재 여부 확인
   const userExists = await checkUserExists(userId);
   if (!userExists) {
-    throw new Error("존재하지 않는 유저입니다.");
+    throw new NotFoundError("존재하지 않는 유저입니다.", { userId });
   }
 
   // 1. 진행 중인 미션 목록 조회
@@ -90,13 +91,13 @@ export const completeInProgressMission = async (userId: number, userMissionId: n
   // 0. 유저 존재 여부 확인
   const userExists = await checkUserExists(userId);
   if (!userExists) {
-    throw new Error("존재하지 않는 유저입니다.");
+    throw new NotFoundError("존재하지 않는 유저입니다.", { userId });
   }
 
   // 1. 해당 유저의 user_mission인지 확인
   const userMission = await getUserMissionByIdAndUserId(userId, userMissionId);
   if (!userMission) {
-    throw new Error("존재하지 않는 유저 미션입니다.");
+    throw new NotFoundError("존재하지 않는 유저 미션입니다.", { userId, userMissionId });
   }
 
   // 2. 진행중 상태인지 확인 (이미 성공이면 그대로 반환)
@@ -104,7 +105,11 @@ export const completeInProgressMission = async (userId: number, userMissionId: n
     return responseFromUserMission(userMission);
   }
   if (userMission.status !== "진행중") {
-    throw new Error("진행 중인 미션만 완료 처리할 수 있습니다.");
+    throw new ValidationError("진행 중인 미션만 완료 처리할 수 있습니다.", {
+      userId,
+      userMissionId,
+      status: userMission.status,
+    });
   }
 
   // 3. 완료 처리(성공)
