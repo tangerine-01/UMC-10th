@@ -58,8 +58,15 @@ export const getUser = async (userId: number) => {
   return await prisma.user.findFirstOrThrow({ where: { id: BigInt(userId) } });
 };
 
-// 3. 음식 선호 카테고리 매핑
-// [수정] preferences를 user 테이블에 JSON으로 저장하는 구조로 변경했으므로 현재는 미사용 함수임
+/** preferences에 담긴 food_category_id가 DB에 존재하는지 조회 (이름 해석용) */
+export const findFoodCategoriesByIds = async (ids: number[]) => {
+  if (ids.length === 0) return [];
+  return prisma.foodCategory.findMany({
+    where: { id: { in: ids.map((id) => BigInt(id)) } },
+  });
+};
+
+// 3. 음식 선호 카테고리 매핑 (Junction — 필요 시에만 사용. 회원가입은 user.preferences JSON + 아래 조회로 처리)
 export const setPreference = async (userId: number, foodCategoryId: number): Promise<void> => {
   await prisma.userFoodCategory.create({
     data: {

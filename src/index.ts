@@ -36,18 +36,68 @@ const router = express.Router();
 RegisterRoutes(router);
 app.use("/api/v1", router);
 
+function isAppError(err: unknown): err is AppError {
+  return err instanceof AppError;
+}
+
+/** Prisma 등에서 나온 긴 기술 메시지는 클라이언트에 그대로 노출하지 않음 */
+function clientSafeErrorPayload(err: unknown): { statusCode: number; errorCode: string; message: string; data: unknown } {
+  if (isAppError(err)) {
+    return {
+      statusCode: err.statusCode || 500,
+      errorCode: err.errorCode || "UNKNOWN",
+      message: err.message || "오류가 발생했습니다.",
+      data: err.data ?? null,
+    };
+  }
+
+  console.error(err);
+
+  if (err instanceof Error) {
+    const m = err.message;
+    const isPrismaLike =
+      m.includes("Invalid `prisma.") ||
+      /foreign key constraint/i.test(m) ||
+      /unique constraint/i.test(m);
+
+    if (isPrismaLike) {
+      return {
+        statusCode: 400,
+        errorCode: "COMMON400",
+        message: "요청 값이 데이터베이스 조건과 맞지 않습니다. 참조 ID·중복 여부 등을 확인해 주세요.",
+        data: null,
+      };
+    }
+
+    return {
+      statusCode: 500,
+      errorCode: "COMMON500",
+      message: m || "서버 오류가 발생했습니다.",
+      data: null,
+    };
+  }
+
+  return {
+    statusCode: 500,
+    errorCode: "COMMON500",
+    message: "알 수 없는 오류가 발생했습니다.",
+    data: null,
+  };
+}
+
 /**
  * 전역 오류를 처리하기 위한 미들웨어
  */
-app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(err);
   }
 
-  (res.status(err.statusCode || 500) as any).error({
-    errorCode: err.errorCode || "unknown",
-    message: err.message || null,
-    data: err.data || null,
+  const payload = clientSafeErrorPayload(err);
+  (res.status(payload.statusCode) as any).error({
+    errorCode: payload.errorCode,
+    message: payload.message,
+    data: payload.data,
   });
 });
 
