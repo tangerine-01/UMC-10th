@@ -5,6 +5,11 @@ import { DuplicateUserEmailError, ValidationError } from "../../../common/errors
 
 export const userSignUp = async (data: UserSignUpRequest): Promise<UserSignUpResponse> => {
   const birth_data = new Date(data.birth_data);
+  if (Number.isNaN(birth_data.getTime())) {
+    throw new ValidationError("birth_data는 YYYY-MM-DD 형식의 올바른 날짜여야 합니다.", {
+      birth_data: data.birth_data,
+    });
+  }
 
   // 선호 카테고리 ID는 FK(userFoodCategory) 또는 JSON 저장 전에 반드시 존재 여부 확인
   const categories = await findFoodCategoriesByIds(data.preferences);

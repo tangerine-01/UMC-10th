@@ -20,7 +20,7 @@ export class UserController extends Controller {
     nickname: "UMC10th",
     user_phone: "01012345678",
     user_gender: "여성",
-    birth_data: "2000-01-01",
+    birth_data: "2005-09-15",
     address: "서울시",
     role: "일반 사용자",
     point: 0,
