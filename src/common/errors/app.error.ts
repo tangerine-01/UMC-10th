@@ -14,5 +14,4 @@ export class AppError extends Error {
       this.statusCode = params?.statusCode ?? 500;
       this.data = params?.data ?? null;
     }
-  }
-  
+}

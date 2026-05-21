@@ -5,6 +5,11 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { RegisterRoutes } from "./generated/routes.js";
 import { AppError } from "./common/errors/app.error.js";
+// src/index.ts
+import swaggerUi from "swagger-ui-express";
+// ESM 환경에서는 JSON 파일을 가져올 때 아래와 같이 처리합니다.
+import path from "path";
+import fs from "fs";
 
 // 1. 환경 변수 설정
 dotenv.config();
@@ -40,8 +45,27 @@ function isAppError(err: unknown): err is AppError {
   return err instanceof AppError;
 }
 
+function isTsoaValidateError(err: unknown): err is { status: number; fields: Record<string, unknown> } {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "fields" in err &&
+    "status" in err &&
+    (err as { status: number }).status === 400
+  );
+}
+
 /** Prisma 등에서 나온 긴 기술 메시지는 클라이언트에 그대로 노출하지 않음 */
 function clientSafeErrorPayload(err: unknown): { statusCode: number; errorCode: string; message: string; data: unknown } {
+  if (isTsoaValidateError(err)) {
+    return {
+      statusCode: 400,
+      errorCode: "COMMON400",
+      message: "요청 형식이 올바르지 않습니다. 필수 필드·필드명을 확인해 주세요.",
+      data: err.fields,
+    };
+  }
+
   if (isAppError(err)) {
     return {
       statusCode: err.statusCode || 500,
@@ -101,7 +125,12 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-// 4. 서버 시작
+const swaggerFile = JSON.parse(
+  fs.readFileSync(path.resolve("dist/swagger.json"), "utf8")
+);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 app.listen(port, () => {
-  console.log(`[server]: Server is running at <http://localhost>:${port}`);
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+  console.log(`[swagger]: http://localhost:${port}/docs`);
 });
