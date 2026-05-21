@@ -1,3 +1,5 @@
+import type { ReviewImageRow, ReviewRow, ShopReviewListRow, UserReviewListRow } from "../repositories/review.repository.js";
+
 export interface ReviewCreateRequest {
   user_id: number;
   user_mission_id: number;
@@ -51,28 +53,28 @@ export const bodyToReview = (body: ReviewCreateRequest, shopId: number) => {
   };
 };
 
-export const responseFromReview = (review: any, images: any[]) => {
+export const responseFromReview = (review: ReviewRow, images: ReviewImageRow[]) => {
   return {
     review_id: review.id,
     shop_id: review.shop_id,
     user_id: review.user_id,
-    nickname: review.nickname,
+    nickname: review.nickname ?? "",
     rating: Number(review.rating),
     body: review.body,
     image_urls: images.map((img) => img.s3_url),
-    created_date: review.created_date,
+    created_date: review.created_date ?? new Date(),
   };
 };
 
-export const responseFromReviews = (reviews: any[]) => {
+export const responseFromReviews = (reviews: ShopReviewListRow[]) => {
   const lastReview = reviews[reviews.length - 1];
   return {
     data: reviews.map((r) => ({
       review_id: r.id,
-      nickname: r.nickname,
+      nickname: r.nickname ?? "",
       rating: Number(r.rating),
       body: r.body,
-      created_date: r.created_date,
+      created_date: r.created_date ?? new Date(),
     })),
     pagination: {
       cursor: lastReview ? lastReview.id : null,
@@ -80,7 +82,7 @@ export const responseFromReviews = (reviews: any[]) => {
   };
 };
 
-export const responseFromMyReviews = (reviews: any[]) => {
+export const responseFromMyReviews = (reviews: UserReviewListRow[]) => {
   const lastReview = reviews[reviews.length - 1];
   return {
     data: reviews.map((r) => ({
@@ -89,7 +91,7 @@ export const responseFromMyReviews = (reviews: any[]) => {
       shop_name: r.shop_name,
       rating: Number(r.rating),
       body: r.body,
-      created_date: r.created_date,
+      created_date: r.created_date ?? new Date(),
     })),
     pagination: {
       cursor: lastReview ? lastReview.id : null,

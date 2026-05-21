@@ -251,10 +251,6 @@
 						"type": "number",
 						"format": "double"
 					},
-					"region_id": {
-						"type": "number",
-						"format": "double"
-					},
 					"shop_name": {
 						"type": "string"
 					},
@@ -270,7 +266,6 @@
 				},
 				"required": [
 					"owner_id",
-					"region_id",
 					"shop_name",
 					"shop_position"
 				],
@@ -960,7 +955,7 @@
 											"nickname": "UMC10th",
 											"user_phone": "01012345678",
 											"user_gender": "여성",
-											"birth_data": "2000-01-01",
+											"birth_data": "2005-09-15",
 											"address": "서울시",
 											"role": "일반 사용자",
 											"point": 0,
@@ -1169,7 +1164,6 @@
 									"Example 1": {
 										"value": {
 											"owner_id": 1,
-											"region_id": 1,
 											"shop_name": "UMC 맛집",
 											"shop_position": "서울시 강남구",
 											"shop_explain": "UMC 10기 단골 가게",

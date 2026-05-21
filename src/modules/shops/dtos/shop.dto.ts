@@ -1,6 +1,7 @@
+import type { ShopRow } from "../repositories/shop.repository.js";
+
 export interface ShopCreateRequest {
   owner_id: number;
-  region_id: number;
   shop_name: string;
   shop_position: string;
   shop_explain?: string;
@@ -19,10 +20,10 @@ export interface ShopResponse {
   status: string | null;
 }
 
-export const bodyToShop = (body: ShopCreateRequest) => {
+export const bodyToShop = (body: ShopCreateRequest, regionId: number) => {
   return {
     owner_id: body.owner_id,
-    region_id: body.region_id,
+    region_id: regionId,
     shop_name: body.shop_name,
     shop_position: body.shop_position,
     shop_explain: body.shop_explain ?? null,
@@ -30,7 +31,7 @@ export const bodyToShop = (body: ShopCreateRequest) => {
   };
 };
 
-export const responseFromShop = (shop: any) => {
+export const responseFromShop = (shop: ShopRow): ShopResponse => {
   return {
     shop_id: shop.id,
     owner_id: shop.owner_id,

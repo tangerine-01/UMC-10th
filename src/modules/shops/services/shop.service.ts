@@ -18,5 +18,8 @@ export const createShop = async (data: ReturnType<typeof bodyToShop>) => {
 
   // 3. 저장된 가게 반환
   const shop = await getShop(shopId);
+  if (!shop) {
+    throw new NotFoundError("가게 조회에 실패했습니다.", { shopId });
+  }
   return responseFromShop(shop);
 };

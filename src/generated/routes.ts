@@ -111,7 +111,6 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "owner_id": {"dataType":"double","required":true},
-            "region_id": {"dataType":"double","required":true},
             "shop_name": {"dataType":"string","required":true},
             "shop_position": {"dataType":"string","required":true},
             "shop_explain": {"dataType":"string"},

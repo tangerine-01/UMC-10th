@@ -5,13 +5,12 @@ import {
   responseFromReviews,
 } from "../dtos/review.dto.js";
 import { ConflictError, NotFoundError, ValidationError } from "../../../common/errors/error.js";
+import { checkShopExists, checkUserExists } from "../../missions/repositories/mission.repository.js";
 import {
   addReview,
   addReviewImages,
   checkMissionCompleted,
   checkReviewExists,
-  checkShopExists,
-  checkUserExists,
   getReview,
   getReviewImages,
   getReviewsByShopId,
@@ -65,6 +64,9 @@ export const createReview = async (
 
   // 6. 저장된 리뷰 반환
   const review = await getReview(reviewId);
+  if (!review) {
+    throw new NotFoundError("리뷰 조회에 실패했습니다.", { reviewId });
+  }
   const images = await getReviewImages(reviewId);
 
   return responseFromReview(review, images);

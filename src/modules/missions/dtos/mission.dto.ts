@@ -1,3 +1,5 @@
+import type { InProgressMissionRow, MissionRow, UserMissionRow } from "../repositories/mission.repository.js";
+
 export interface MissionCreateRequest {
   shop_id: number;
   title: string;
@@ -37,7 +39,7 @@ export const bodyToMission = (body: MissionCreateRequest, shopId: number) => {
   };
 };
 
-export const responseFromMission = (mission: any) => {
+export const responseFromMission = (mission: MissionRow) => {
   return {
     mission_id: mission.id,
     shop_id: mission.shop_id,
@@ -49,7 +51,7 @@ export const responseFromMission = (mission: any) => {
   };
 };
 
-export const responseFromMissions = (missions: any[]) => {
+export const responseFromMissions = (missions: MissionRow[]) => {
   const lastMission = missions[missions.length - 1];
   return {
     data: missions.map((m) => ({
@@ -101,7 +103,7 @@ export const bodyToUserMission = (body: UserMissionCreateRequest) => {
   };
 };
 
-export const responseFromUserMission = (userMission: any) => {
+export const responseFromUserMission = (userMission: UserMissionRow) => {
   return {
     user_mission_id: userMission.id,
     user_id: userMission.user_id,
@@ -111,7 +113,7 @@ export const responseFromUserMission = (userMission: any) => {
   };
 };
 
-export const responseFromInProgressMissions = (rows: any[]) => {
+export const responseFromInProgressMissions = (rows: InProgressMissionRow[]) => {
   const lastRow = rows[rows.length - 1];
   return {
     data: rows.map((r) => ({

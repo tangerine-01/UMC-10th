@@ -1,6 +1,35 @@
 import { prisma } from "../../../db.config.js";
 import { InternalServerError } from "../../../common/errors/error.js";
 
+export interface MissionRow {
+  id: number;
+  shop_id: number;
+  title: string;
+  body: string;
+  point: number;
+  status: string | null;
+  created_date: Date | null;
+}
+
+export interface UserMissionRow {
+  id: number;
+  user_id: number;
+  mission_id: number;
+  status: string;
+  created_date: Date | null;
+}
+
+export interface InProgressMissionRow {
+  user_mission_id: number;
+  mission_id: number;
+  shop_id: number;
+  title: string;
+  body: string;
+  point: number;
+  status: string;
+  created_date: Date | null;
+}
+
 // 가게 존재 여부 확인
 export const checkShopExists = async (shopId: number): Promise<boolean> => {
   const count = await prisma.shop.count({ where: { id: BigInt(shopId) } });
@@ -33,7 +62,7 @@ export const addMission = async (data: {
 };
 
 // 미션 조회
-export const getMission = async (missionId: number): Promise<any | null> => {
+export const getMission = async (missionId: number): Promise<MissionRow | null> => {
   const mission = await prisma.mission.findUnique({
     where: { id: BigInt(missionId) },
   });
@@ -95,7 +124,7 @@ export const addUserMission = async (data: {
 };
 
 // user_mission 조회
-export const getUserMission = async (userMissionId: number): Promise<any | null> => {
+export const getUserMission = async (userMissionId: number): Promise<UserMissionRow | null> => {
   const userMission = await prisma.userMission.findUnique({
     where: { id: BigInt(userMissionId) },
   });
@@ -114,7 +143,7 @@ export const getUserMission = async (userMissionId: number): Promise<any | null>
 export const getUserMissionByIdAndUserId = async (
   userId: number,
   userMissionId: number
-): Promise<any | null> => {
+): Promise<UserMissionRow | null> => {
   const row = await prisma.userMission.findFirst({
     where: {
       id: BigInt(userMissionId),
@@ -136,7 +165,7 @@ export const getUserMissionByIdAndUserId = async (
 export const completeUserMission = async (
   userId: number,
   userMissionId: number
-): Promise<any> => {
+): Promise<UserMissionRow> => {
   const updated = await prisma.userMission.update({
     where: { id: BigInt(userMissionId) },
     data: { status: "성공" },
@@ -154,7 +183,7 @@ export const completeUserMission = async (
 export const getMissionsByShopId = async (
   shopId: number,
   cursor: number
-): Promise<any[]> => {
+): Promise<MissionRow[]> => {
   const rows = await prisma.mission.findMany({
     where: {
       shopId: BigInt(shopId),
@@ -183,7 +212,7 @@ export const checkUserExists = async (userId: number): Promise<boolean> => {
 export const getInProgressMissionsByUserId = async (
   userId: number,
   cursor: number
-): Promise<any[]> => {
+): Promise<InProgressMissionRow[]> => {
   const rows = await prisma.userMission.findMany({
     where: {
       userId: BigInt(userId),

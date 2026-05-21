@@ -35,6 +35,9 @@ export const createMission = async (data: ReturnType<typeof bodyToMission>) => {
 
   // 3. 저장된 미션 반환
   const mission = await getMission(missionId);
+  if (!mission) {
+    throw new NotFoundError("미션 조회에 실패했습니다.", { missionId });
+  }
   return responseFromMission(mission);
 };
 
@@ -56,6 +59,9 @@ export const challengeMission = async (data: ReturnType<typeof bodyToUserMission
 
   // 4. 저장된 user_mission 반환
   const userMission = await getUserMission(userMissionId);
+  if (!userMission) {
+    throw new NotFoundError("유저 미션 조회에 실패했습니다.", { userMissionId });
+  }
   return responseFromUserMission(userMission);
 };
 

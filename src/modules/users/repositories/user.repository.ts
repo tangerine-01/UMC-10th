@@ -1,7 +1,21 @@
 import { prisma } from "../../../db.config.js";
 import { InternalServerError } from "../../../common/errors/error.js";
 
-export const addUser = async (data: any): Promise<number | null> => {
+export interface AddUserData {
+  user_name: string;
+  nickname: string;
+  user_phone: string;
+  user_gender: string;
+  birth_data: Date;
+  address: string;
+  role: string;
+  point: number;
+  email: string;
+  preferences: number[];
+  password: string;
+}
+
+export const addUser = async (data: AddUserData): Promise<number | null> => {
   try {
     // 1. 이미 존재하는 이메일인지 확인
     const existingUser = await prisma.user.findFirst({

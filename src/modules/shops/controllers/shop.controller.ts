@@ -14,7 +14,6 @@ export class ShopController extends Controller {
   @Post("{regionId}/shops")
   @Example<ShopCreateRequest>({
     owner_id: 1,
-    region_id: 1,
     shop_name: "UMC 맛집",
     shop_position: "서울시 강남구",
     shop_explain: "UMC 10기 단골 가게",
@@ -28,7 +27,7 @@ export class ShopController extends Controller {
     @Path() regionId: number,
     @Body() body: ShopCreateRequest,
   ): Promise<ApiResponse<ShopResponse>> {
-    const data = bodyToShop({ ...body, region_id: regionId });
+    const data = bodyToShop(body, regionId);
     const shop = await createShop(data);
     return success(shop);
   }

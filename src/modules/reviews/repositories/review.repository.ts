@@ -1,6 +1,41 @@
 import { prisma } from "../../../db.config.js";
 import { InternalServerError } from "../../../common/errors/error.js";
 
+export interface ReviewRow {
+  id: number;
+  shop_id: number;
+  user_id: number;
+  user_mission_id: number;
+  rating: number;
+  body: string;
+  created_date: Date | null;
+  nickname: string | null;
+}
+
+export interface ReviewImageRow {
+  id: number;
+  review_id: number;
+  s3_url: string;
+  s3_key: string;
+}
+
+export interface ShopReviewListRow {
+  id: number;
+  rating: number;
+  body: string;
+  created_date: Date | null;
+  nickname: string | null;
+}
+
+export interface UserReviewListRow {
+  id: number;
+  shop_id: number;
+  shop_name: string;
+  rating: number;
+  body: string;
+  created_date: Date | null;
+}
+
 export const checkMissionCompleted = async (
   userId: number,
   shopId: number,
@@ -73,7 +108,7 @@ export const addReviewImages = async (
   }
 };
 
-export const getReview = async (reviewId: number): Promise<any | null> => {
+export const getReview = async (reviewId: number): Promise<ReviewRow | null> => {
   const review = await prisma.review.findUnique({
     where: { id: BigInt(reviewId) },
     include: { user: { select: { nickname: true } } },
@@ -86,14 +121,14 @@ export const getReview = async (reviewId: number): Promise<any | null> => {
     shop_id: Number(review.shopId),
     user_id: Number(review.userId),
     user_mission_id: Number(review.userMissionId),
-    rating: review.rating,
+    rating: Number(review.rating),
     body: review.body,
     created_date: review.createdDate,
     nickname: review.user.nickname,
   };
 };
 
-export const getReviewImages = async (reviewId: number): Promise<any[]> => {
+export const getReviewImages = async (reviewId: number): Promise<ReviewImageRow[]> => {
   const rows = await prisma.reviewImage.findMany({
     where: { reviewId: BigInt(reviewId) },
     orderBy: { id: "asc" },
@@ -107,15 +142,10 @@ export const getReviewImages = async (reviewId: number): Promise<any[]> => {
   }));
 };
 
-export const checkShopExists = async (shopId: number): Promise<boolean> => {
-  const count = await prisma.shop.count({ where: { id: BigInt(shopId) } });
-  return count > 0;
-};
-
 export const getReviewsByShopId = async (
   shopId: number,
   cursor: number
-): Promise<any[]> => {
+): Promise<ShopReviewListRow[]> => {
   const rows = await prisma.review.findMany({
     where: {
       shopId: BigInt(shopId),
@@ -128,22 +158,17 @@ export const getReviewsByShopId = async (
 
   return rows.map((r) => ({
     id: Number(r.id),
-    rating: r.rating,
+    rating: Number(r.rating),
     body: r.body,
     created_date: r.createdDate,
     nickname: r.user.nickname,
   }));
 };
 
-export const checkUserExists = async (userId: number): Promise<boolean> => {
-  const count = await prisma.user.count({ where: { id: BigInt(userId) } });
-  return count > 0;
-};
-
 export const getReviewsByUserId = async (
   userId: number,
   cursor: number
-): Promise<any[]> => {
+): Promise<UserReviewListRow[]> => {
   const rows = await prisma.review.findMany({
     where: {
       userId: BigInt(userId),
@@ -160,7 +185,7 @@ export const getReviewsByUserId = async (
     id: Number(r.id),
     shop_id: Number(r.shopId),
     shop_name: r.shop.shopName,
-    rating: r.rating,
+    rating: Number(r.rating),
     body: r.body,
     created_date: r.createdDate,
   }));
