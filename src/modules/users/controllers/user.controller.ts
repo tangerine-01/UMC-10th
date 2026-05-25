@@ -1,9 +1,14 @@
-import { Body, Controller, Example, Get, Middlewares, Post, Request, Response, Route, Tags } from "tsoa";
+import { Body, Controller, Example, Get, Middlewares, Patch, Post, Request, Response, Route, Tags } from "tsoa";
 import { Request as ExpressRequest, Response as ExpressResponse, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
-import { UserSignUpRequest, UserSignUpResponse } from "../dtos/user.dto.js";
-import { userSignUp } from "../services/user.service.js";
-import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
+import {
+  UserSignUpRequest,
+  UserSignUpResponse,
+  UserUpdateProfileRequest,
+  UserUpdateProfileResponse,
+} from "../dtos/user.dto.js";
+import { updateMyProfile, userSignUp } from "../services/user.service.js";
+import { authorizeUser, requireJwtAuth } from "../../../common/middlewares/auth.middleware.js";
 import { ApiFailedResponse, ApiResponse, success } from "../../../common/responses/response.js";
 
 @Route("users")
@@ -34,6 +39,33 @@ export class UserController extends Controller {
   public async handleUserSignUp(@Body() body: UserSignUpRequest): Promise<ApiResponse<UserSignUpResponse>> {
     const user = await userSignUp(body);
     return success(user);
+  }
+
+  /**
+   * 내 프로필 수정 API
+   * @summary JWT로 인증된 사용자가 전화번호·생일·주소 등 프로필을 보완·수정합니다. Authorization: Bearer {accessToken}
+   */
+  @Patch("me")
+  @Middlewares(requireJwtAuth())
+  @Example<UserUpdateProfileRequest>({
+    user_phone: "01012345678",
+    birth_data: "2005-09-15",
+    address: "서울시 강남구",
+    nickname: "UMC10th",
+    user_gender: "여성",
+    preferences: [1, 2],
+  })
+  @Response<ApiResponse<UserUpdateProfileResponse>>(200, "프로필 수정 성공")
+  @Response<ApiFailedResponse>(400, "요청 형식 오류·잘못된 birth_data·존재하지 않는 선호 카테고리 ID 등")
+  @Response<ApiFailedResponse>(401, "로그인 필요 (U002)")
+  @Response<ApiFailedResponse>(404, "존재하지 않는 유저 (COMMON404)")
+  @Response<ApiFailedResponse>(500, "서버 오류 (COMMON500)")
+  public async handleUpdateMyProfile(
+    @Body() body: UserUpdateProfileRequest,
+    @Request() req: ExpressRequest,
+  ): Promise<ApiResponse<UserUpdateProfileResponse>> {
+    const result = await updateMyProfile(req.user!.id, body);
+    return success(result);
   }
 
   /**

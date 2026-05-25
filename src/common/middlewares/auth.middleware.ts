@@ -1,4 +1,23 @@
 import { Request, Response, NextFunction } from "express";
+import passport from "passport";
+import type { AuthUserPayload } from "../../auth.config.js";
+
+export function requireJwtAuth() {
+  return (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate("jwt", { session: false }, (err: unknown, user: AuthUserPayload | false) => {
+      if (err || !user) {
+        return res.status(401).error({
+          errorCode: "U002",
+          message: "로그인이 필요합니다.",
+          data: null,
+        });
+      }
+      req.user = user;
+      next();
+    })(req, res, next);
+  };
+}
+
 export function authorizeUser() {
   return async (req: Request, res: Response, next: NextFunction) => {
 	  // cookie-parser가 만들어준 req.cookies 객체에서 username을 확인
