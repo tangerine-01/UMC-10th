@@ -19,3 +19,18 @@ export interface UserSignUpResponse {
   userId: number;
   preferences: string[];
 }
+
+export interface UserUpdateProfileRequest {
+  user_name?: string;
+  nickname?: string;
+  user_phone?: string;
+  user_gender?: "여성" | "남성";
+  birth_data?: string;
+  address?: string;
+  preferences?: number[];
+}
+
+export interface UserUpdateProfileResponse {
+  userId: number;
+  preferences: string[];
+}

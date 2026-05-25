@@ -1,7 +1,6 @@
 import type { ShopRow } from "../repositories/shop.repository.js";
 
 export interface ShopCreateRequest {
-  owner_id: number;
   shop_name: string;
   shop_position: string;
   shop_explain?: string;
@@ -20,9 +19,9 @@ export interface ShopResponse {
   status: string | null;
 }
 
-export const bodyToShop = (body: ShopCreateRequest, regionId: number) => {
+export const bodyToShop = (body: ShopCreateRequest, regionId: number, ownerId: number) => {
   return {
-    owner_id: body.owner_id,
+    owner_id: ownerId,
     region_id: regionId,
     shop_name: body.shop_name,
     shop_position: body.shop_position,

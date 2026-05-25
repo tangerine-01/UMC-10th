@@ -5,6 +5,10 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { RegisterRoutes } from "./generated/routes.js";
 import { AppError } from "./common/errors/app.error.js";
+import passport from "passport";
+import { googleStrategy, jwtStrategy } from "./auth.config.js";
+import { requireJwtAuth } from "./common/middlewares/auth.middleware.js";
+import {prisma} from "./db.config.js";
 // src/index.ts
 import swaggerUi from "swagger-ui-express";
 // ESM 환경에서는 JSON 파일을 가져올 때 아래와 같이 처리합니다.
@@ -14,15 +18,25 @@ import fs from "fs";
 // 1. 환경 변수 설정
 dotenv.config();
 
-const app: Express = express();
+passport.use(googleStrategy);
+passport.use(jwtStrategy);
+
+const app = express();
 const port = process.env.PORT || 3000;
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  (res as any).error = function ({ errorCode = null, message = null, data = null }) {
+  res.error = function ({ errorCode = null, message = null, data = null }) {
     return this.json({
       resultType: "FAILED",
       error: { errorCode, message, data },
       data: null,
+    });
+  };
+  res.success = function (data: unknown) {
+    return this.json({
+      resultType: "SUCCESS",
+      error: null,
+      data,
     });
   };
   next();
@@ -35,6 +49,7 @@ app.use(express.static('public'));    // 정적 파일 접근
 app.use(express.json());              // request의 본문을 json으로 해석할 수 있도록 함(JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
 app.use(cookieParser());              // req.cookies 사용 (cookie-parser)
+app.use(passport.initialize());
 
 // Express.js에 생성한 엔드 포인트들을 register
 const router = express.Router();
@@ -118,7 +133,7 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   }
 
   const payload = clientSafeErrorPayload(err);
-  (res.status(payload.statusCode) as any).error({
+  res.status(payload.statusCode).error({
     errorCode: payload.errorCode,
     message: payload.message,
     data: payload.data,
@@ -133,4 +148,20 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
   console.log(`[swagger]: http://localhost:${port}/docs`);
+});
+
+app.get("/oauth2/login/google", passport.authenticate("google", { session: false }));
+app.get("/oauth2/callback/google", 
+  passport.authenticate("google", { session: false, failureRedirect: "/login-failed" }),
+  (req, res) => {
+    res.status(200).json({ success: true, tokens: req.user });
+  }
+);
+
+app.get("/mypage", requireJwtAuth(), (req, res) => {
+  const user = req.user!;
+  res.status(200).success({
+    message: `인증 성공! ${user.name}님의 마이페이지입니다.`,
+    user,
+  });
 });

@@ -1,7 +1,6 @@
 import type { ReviewImageRow, ReviewRow, ShopReviewListRow, UserReviewListRow } from "../repositories/review.repository.js";
 
 export interface ReviewCreateRequest {
-  user_id: number;
   user_mission_id: number;
   rating: number;
   body: string;
@@ -42,9 +41,9 @@ export interface MyReviewsListResponse {
   pagination: { cursor: number | null };
 }
 
-export const bodyToReview = (body: ReviewCreateRequest, shopId: number) => {
+export const bodyToReview = (body: ReviewCreateRequest, shopId: number, userId: number) => {
   return {
-    user_id: body.user_id,
+    user_id: userId,
     shop_id: shopId,
     user_mission_id: body.user_mission_id,
     rating: body.rating,

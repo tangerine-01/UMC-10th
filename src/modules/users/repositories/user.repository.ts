@@ -101,3 +101,53 @@ export const getUserPreferencesByUserId = async (userId: number) => {
     orderBy: { foodCategoryId: "asc" },
   });
 };
+
+export interface UpdateUserProfileData {
+  user_name?: string;
+  nickname?: string;
+  user_phone?: string;
+  user_gender?: string;
+  birth_data?: Date;
+  address?: string;
+  preferences?: number[];
+}
+
+export const updateUserById = async (
+  userId: number,
+  data: UpdateUserProfileData,
+): Promise<number | null> => {
+  try {
+    const existing = await prisma.user.findFirst({ where: { id: BigInt(userId) } });
+    if (!existing) {
+      return null;
+    }
+
+    const genderMap: Record<string, "여성" | "남성"> = {
+      "여성": "여성",
+      "남성": "남성",
+    };
+
+    const updateData: Parameters<typeof prisma.user.update>[0]["data"] = {};
+    if (data.user_name !== undefined) updateData.userName = data.user_name;
+    if (data.nickname !== undefined) updateData.nickname = data.nickname;
+    if (data.user_phone !== undefined) updateData.userPhone = data.user_phone;
+    if (data.user_gender !== undefined) {
+      updateData.userGender = genderMap[data.user_gender] ?? existing.userGender;
+    }
+    if (data.birth_data !== undefined) updateData.birthData = data.birth_data;
+    if (data.address !== undefined) updateData.address = data.address;
+    if (data.preferences !== undefined) updateData.preferences = data.preferences;
+
+    await prisma.user.update({
+      where: { id: BigInt(userId) },
+      data: updateData,
+    });
+
+    return userId;
+  } catch (err) {
+    throw new InternalServerError("유저 정보 수정 중 오류가 발생했습니다.", {
+      userId,
+      cause: err instanceof Error ? err.message : String(err),
+    });
+  }
+};
