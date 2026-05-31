@@ -3,7 +3,6 @@ import {
   Controller,
   Example,
   Get,
-  Middlewares,
   Patch,
   Path,
   Post,
@@ -11,10 +10,10 @@ import {
   Request,
   Response,
   Route,
+  Security,
   Tags,
 } from "tsoa";
 import { Request as ExpressRequest } from "express";
-import { requireJwtAuth } from "../../../common/middlewares/auth.middleware.js";
 import { ApiFailedResponse, ApiResponse, success } from "../../../common/responses/response.js";
 import {
   bodyToMission,
@@ -39,11 +38,11 @@ import {
 export class ShopMissionController extends Controller {
   /**
    * 가게 미션 등록 API
-   * @summary 특정 가게에 새 미션을 등록합니다. Authorization: Bearer {accessToken}
+   * @summary 특정 가게에 새 미션을 등록합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)
    * @param shopId 미션을 등록할 가게 ID
    */
   @Post("{shopId}/missions")
-  @Middlewares(requireJwtAuth())
+  @Security("jwt")
   @Example<MissionCreateRequest>({
     shop_id: 1,
     title: "리뷰 작성 미션",
@@ -66,7 +65,7 @@ export class ShopMissionController extends Controller {
 
   /**
    * 가게 미션 목록 조회 API
-   * @summary 특정 가게의 미션 목록을 커서 기반으로 조회합니다.
+   * @summary 특정 가게의 미션 목록을 커서 기반으로 조회합니다. (인증 불필요)
    * @param shopId 가게 ID
    * @param cursor 페이지네이션 커서 (기본값 0)
    */
@@ -89,10 +88,10 @@ export class ShopMissionController extends Controller {
 export class MissionController extends Controller {
   /**
    * 미션 도전 API
-   * @summary 유저가 미션에 도전(진행 중 상태로 등록)합니다. Authorization: Bearer {accessToken}
+   * @summary 미션에 도전(진행 중 상태로 등록)합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)
    */
   @Post("challenge")
-  @Middlewares(requireJwtAuth())
+  @Security("jwt")
   @Example<UserMissionCreateRequest>({
     mission_id: 1,
   })
@@ -117,11 +116,11 @@ export class MissionController extends Controller {
 export class UserMissionController extends Controller {
   /**
    * 진행 중인 미션 목록 조회 API
-   * @summary 로그인한 유저의 진행 중(IN_PROGRESS) 미션 목록을 커서 기반으로 조회합니다. Authorization: Bearer {accessToken}
+   * @summary 진행 중(IN_PROGRESS) 미션 목록을 커서 기반으로 조회합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)
    * @param cursor 페이지네이션 커서 (기본값 0)
    */
   @Get("me/missions/in-progress")
-  @Middlewares(requireJwtAuth())
+  @Security("jwt")
   @Response<ApiResponse<InProgressMissionsListResponse>>(200, "진행 중 미션 목록 조회 성공")
   @Response<ApiFailedResponse>(400, "요청 형식 오류 (COMMON400)")
   @Response<ApiFailedResponse>(401, "로그인 필요 (U002)")
@@ -137,11 +136,11 @@ export class UserMissionController extends Controller {
 
   /**
    * 진행 중 미션 완료 처리 API
-   * @summary 로그인한 유저의 진행 중 미션을 완료(COMPLETED) 상태로 변경합니다. Authorization: Bearer {accessToken}
+   * @summary 진행 중 미션을 완료(COMPLETED) 상태로 변경합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)
    * @param userMissionId 유저 미션 ID
    */
   @Patch("me/missions/{userMissionId}/complete")
-  @Middlewares(requireJwtAuth())
+  @Security("jwt")
   @Response<ApiResponse<UserMissionResponse>>(200, "미션 완료 처리 성공")
   @Response<ApiFailedResponse>(400, "요청 형식 오류·진행 중이 아닌 미션 (COMMON400)")
   @Response<ApiFailedResponse>(401, "로그인 필요 (U002)")

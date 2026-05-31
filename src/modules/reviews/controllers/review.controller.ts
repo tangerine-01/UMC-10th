@@ -3,17 +3,16 @@ import {
   Controller,
   Example,
   Get,
-  Middlewares,
   Path,
   Post,
   Query,
   Request,
   Response,
   Route,
+  Security,
   Tags,
 } from "tsoa";
 import { Request as ExpressRequest } from "express";
-import { requireJwtAuth } from "../../../common/middlewares/auth.middleware.js";
 import { ApiFailedResponse, ApiResponse, success } from "../../../common/responses/response.js";
 import {
   bodyToReview,
@@ -29,11 +28,11 @@ import { createReview, getMyReviews, getReviews } from "../services/review.servi
 export class ReviewController extends Controller {
   /**
    * 가게 리뷰 작성 API
-   * @summary 특정 가게에 리뷰를 등록합니다. Authorization: Bearer {accessToken}
+   * @summary 특정 가게에 리뷰를 등록합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)
    * @param shopId 리뷰를 작성할 가게 ID
    */
   @Post("{shopId}/reviews")
-  @Middlewares(requireJwtAuth())
+  @Security("jwt")
   @Example<ReviewCreateRequest>({
     user_mission_id: 1,
     rating: 4.5,
@@ -62,7 +61,7 @@ export class ReviewController extends Controller {
 
   /**
    * 가게 리뷰 목록 조회 API
-   * @summary 특정 가게의 리뷰 목록을 커서 기반으로 조회합니다.
+   * @summary 특정 가게의 리뷰 목록을 커서 기반으로 조회합니다. (인증 불필요)
    * @param shopId 가게 ID
    * @param cursor 페이지네이션 커서 (기본값 0, 이전 응답의 pagination.cursor 사용)
    */
@@ -85,11 +84,11 @@ export class ReviewController extends Controller {
 export class UserReviewController extends Controller {
   /**
    * 내가 작성한 리뷰 목록 조회 API
-   * @summary 로그인한 유저가 작성한 리뷰 목록을 커서 기반으로 조회합니다. Authorization: Bearer {accessToken}
+   * @summary 내가 작성한 리뷰 목록을 커서 기반으로 조회합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)
    * @param cursor 페이지네이션 커서 (기본값 0)
    */
   @Get("me/reviews")
-  @Middlewares(requireJwtAuth())
+  @Security("jwt")
   @Response<ApiResponse<MyReviewsListResponse>>(200, "내 리뷰 목록 조회 성공")
   @Response<ApiFailedResponse>(400, "요청 형식 오류 (COMMON400)")
   @Response<ApiFailedResponse>(401, "로그인 필요 (U002)")

@@ -2,16 +2,15 @@ import {
   Body,
   Controller,
   Example,
-  Middlewares,
   Path,
   Post,
   Request,
   Response,
   Route,
+  Security,
   Tags,
 } from "tsoa";
 import { Request as ExpressRequest } from "express";
-import { requireJwtAuth } from "../../../common/middlewares/auth.middleware.js";
 import { ApiFailedResponse, ApiResponse, success } from "../../../common/responses/response.js";
 import { bodyToShop, ShopCreateRequest, ShopResponse } from "../dtos/shop.dto.js";
 import { createShop } from "../services/shop.service.js";
@@ -21,11 +20,11 @@ import { createShop } from "../services/shop.service.js";
 export class ShopController extends Controller {
   /**
    * 지역 내 가게 등록 API
-   * @summary 특정 지역에 새 가게를 등록합니다. Authorization: Bearer {accessToken}
+   * @summary 특정 지역에 새 가게를 등록합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)
    * @param regionId 가게를 등록할 지역 ID
    */
   @Post("{regionId}/shops")
-  @Middlewares(requireJwtAuth())
+  @Security("jwt")
   @Example<ShopCreateRequest>({
     shop_name: "UMC 맛집",
     shop_position: "서울시 강남구",

@@ -1,14 +1,11 @@
 import dotenv from "dotenv";
 import express, { Express, NextFunction, Request, Response } from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { RegisterRoutes } from "./generated/routes.js";
 import { AppError } from "./common/errors/app.error.js";
 import passport from "passport";
 import { googleStrategy, jwtStrategy } from "./auth.config.js";
-import { requireJwtAuth } from "./common/middlewares/auth.middleware.js";
-import {prisma} from "./db.config.js";
 // src/index.ts
 import swaggerUi from "swagger-ui-express";
 // ESM 환경에서는 JSON 파일을 가져올 때 아래와 같이 처리합니다.
@@ -48,13 +45,13 @@ app.use(cors());                      // cors 방식 허용
 app.use(express.static('public'));    // 정적 파일 접근
 app.use(express.json());              // request의 본문을 json으로 해석할 수 있도록 함(JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
-app.use(cookieParser());              // req.cookies 사용 (cookie-parser)
 app.use(passport.initialize());
 
 // Express.js에 생성한 엔드 포인트들을 register
 const router = express.Router();
+
 RegisterRoutes(router);
-app.use("/api/v1", router);
+app.use(router);
 
 function isAppError(err: unknown): err is AppError {
   return err instanceof AppError;
@@ -70,7 +67,7 @@ function isTsoaValidateError(err: unknown): err is { status: number; fields: Rec
   );
 }
 
-/** Prisma 등에서 나온 긴 기술 메시지는 클라이언트에 그대로 노출하지 않음 */
+/** Prisma 등에서 나온 긴 기술 메시지는 클라이언트에 노출하지 않음 */
 function clientSafeErrorPayload(err: unknown): { statusCode: number; errorCode: string; message: string; data: unknown } {
   if (isTsoaValidateError(err)) {
     return {
@@ -104,6 +101,15 @@ function clientSafeErrorPayload(err: unknown): { statusCode: number; errorCode: 
         statusCode: 400,
         errorCode: "COMMON400",
         message: "요청 값이 데이터베이스 조건과 맞지 않습니다. 참조 ID·중복 여부 등을 확인해 주세요.",
+        data: null,
+      };
+    }
+
+    if (m === "로그인이 필요합니다.") {
+      return {
+        statusCode: 401,
+        errorCode: "U002",
+        message: m,
         data: null,
       };
     }
@@ -143,25 +149,29 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
 const swaggerFile = JSON.parse(
   fs.readFileSync(path.resolve("dist/swagger.json"), "utf8")
 );
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-  console.log(`[swagger]: http://localhost:${port}/docs`);
-});
+swaggerFile.info.description =
+  "JWT 테스트: 1) /oauth2/login/google 로그인 → accessToken 복사 " +
+  "2) Authorize → jwt에 토큰만 입력(Bearer 접두사 없이) " +
+  "3) 자물쇠 표시 API Execute";
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  }),
+);
 
 app.get("/oauth2/login/google", passport.authenticate("google", { session: false }));
-app.get("/oauth2/callback/google", 
+app.get("/oauth2/callback/google",
   passport.authenticate("google", { session: false, failureRedirect: "/login-failed" }),
   (req, res) => {
     res.status(200).json({ success: true, tokens: req.user });
   }
 );
 
-app.get("/mypage", requireJwtAuth(), (req, res) => {
-  const user = req.user!;
-  res.status(200).success({
-    message: `인증 성공! ${user.name}님의 마이페이지입니다.`,
-    user,
-  });
+app.listen(port, () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+  console.log(`[swagger]: http://localhost:${port}/docs`);
 });
