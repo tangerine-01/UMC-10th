@@ -5,11 +5,19 @@
     "spec": {
       "outputDirectory": "dist",
       "specVersion": 3,
-      "basePath": "/api/v1"
+      "description": "JWT: /oauth2/login/google → accessToken → Authorize(jwt) → 자물쇠 API 호출",
+      "securityDefinitions": {
+        "jwt": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
     },
     "routes": {
       "routesDir": "src/generated",
-      "esm": true
+      "esm": true,
+      "authenticationModule": "./src/common/middlewares/auth.middleware.ts"
     }
   }
   
