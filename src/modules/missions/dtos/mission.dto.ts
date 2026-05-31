@@ -70,7 +70,6 @@ export const responseFromMissions = (missions: MissionRow[]) => {
 };
 
 export interface UserMissionCreateRequest {
-  user_id: number;
   mission_id: number;
 }
 
@@ -96,9 +95,9 @@ export interface InProgressMissionsListResponse {
   pagination: { cursor: number | null };
 }
 
-export const bodyToUserMission = (body: UserMissionCreateRequest) => {
+export const bodyToUserMission = (body: UserMissionCreateRequest, userId: number) => {
   return {
-    user_id: body.user_id,
+    user_id: userId,
     mission_id: body.mission_id,
   };
 };
