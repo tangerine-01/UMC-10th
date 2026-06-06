@@ -1,0 +1,2174 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"UserSignUpResponse": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"preferences": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"preferences"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_UserSignUpResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserSignUpResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiErrorBody": {
+				"properties": {
+					"errorCode": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {}
+				},
+				"required": [
+					"errorCode",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiFailedResponse": {
+				"description": "전역 에러 핸들러(res.error)가 내려주는 실패 응답 형식",
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"FAILED"
+						],
+						"nullable": false
+					},
+					"error": {
+						"$ref": "#/components/schemas/ApiErrorBody"
+					},
+					"data": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserSignUpRequest": {
+				"properties": {
+					"user_name": {
+						"type": "string"
+					},
+					"nickname": {
+						"type": "string"
+					},
+					"user_phone": {
+						"type": "string"
+					},
+					"user_gender": {
+						"type": "string",
+						"enum": [
+							"여성",
+							"남성"
+						]
+					},
+					"birth_data": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string",
+						"enum": [
+							"일반 사용자",
+							"가게 운영자"
+						]
+					},
+					"point": {
+						"type": "number",
+						"format": "double"
+					},
+					"email": {
+						"type": "string"
+					},
+					"preferences": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user_name",
+					"nickname",
+					"user_phone",
+					"user_gender",
+					"birth_data",
+					"address",
+					"role",
+					"point",
+					"email",
+					"preferences",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserUpdateProfileResponse": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"preferences": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"preferences"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_UserUpdateProfileResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserUpdateProfileResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserUpdateProfileRequest": {
+				"properties": {
+					"user_name": {
+						"type": "string"
+					},
+					"nickname": {
+						"type": "string"
+					},
+					"user_phone": {
+						"type": "string"
+					},
+					"user_gender": {
+						"type": "string",
+						"enum": [
+							"여성",
+							"남성"
+						]
+					},
+					"birth_data": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"preferences": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Express.User": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse__message-string--user-Express.User__": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"properties": {
+							"user": {
+								"$ref": "#/components/schemas/Express.User"
+							},
+							"message": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"user",
+							"message"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse__message-string--user_58__id-number--email-string--name-string___": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"properties": {
+							"user": {
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"id": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"name",
+									"email",
+									"id"
+								],
+								"type": "object"
+							},
+							"message": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"user",
+							"message"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShopResponse": {
+				"properties": {
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"owner_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"region_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"region_name": {
+						"type": "string"
+					},
+					"shop_name": {
+						"type": "string"
+					},
+					"shop_position": {
+						"type": "string"
+					},
+					"shop_explain": {
+						"type": "string",
+						"nullable": true
+					},
+					"shop_phone": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"shop_id",
+					"owner_id",
+					"region_id",
+					"region_name",
+					"shop_name",
+					"shop_position",
+					"shop_explain",
+					"shop_phone",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ShopResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ShopResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShopCreateRequest": {
+				"properties": {
+					"shop_name": {
+						"type": "string"
+					},
+					"shop_position": {
+						"type": "string"
+					},
+					"shop_explain": {
+						"type": "string"
+					},
+					"shop_phone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"shop_name",
+					"shop_position"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReviewCreateResponse": {
+				"properties": {
+					"review_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"nickname": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"body": {
+						"type": "string"
+					},
+					"image_urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"created_date": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"review_id",
+					"shop_id",
+					"user_id",
+					"nickname",
+					"rating",
+					"body",
+					"image_urls",
+					"created_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ReviewCreateResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ReviewCreateResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReviewCreateRequest": {
+				"properties": {
+					"user_mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"body": {
+						"type": "string"
+					},
+					"image_urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"user_mission_id",
+					"rating",
+					"body"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReviewsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"body": {
+									"type": "string"
+								},
+								"rating": {
+									"type": "number",
+									"format": "double"
+								},
+								"nickname": {
+									"type": "string"
+								},
+								"review_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"body",
+								"rating",
+								"nickname",
+								"review_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ReviewsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ReviewsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MyReviewsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"body": {
+									"type": "string"
+								},
+								"rating": {
+									"type": "number",
+									"format": "double"
+								},
+								"shop_name": {
+									"type": "string"
+								},
+								"shop_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"review_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"body",
+								"rating",
+								"shop_name",
+								"shop_id",
+								"review_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MyReviewsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/MyReviewsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionResponse": {
+				"properties": {
+					"mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"point": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_date": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"mission_id",
+					"shop_id",
+					"title",
+					"body",
+					"point",
+					"status",
+					"created_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MissionResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/MissionResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionCreateRequest": {
+				"properties": {
+					"shop_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"point": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"shop_id",
+					"title",
+					"body",
+					"point"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time",
+									"nullable": true
+								},
+								"status": {
+									"type": "string",
+									"nullable": true
+								},
+								"point": {
+									"type": "number",
+									"format": "double"
+								},
+								"body": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"shop_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"mission_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"status",
+								"point",
+								"body",
+								"title",
+								"shop_id",
+								"mission_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MissionsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/MissionsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserMissionResponse": {
+				"properties": {
+					"user_mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"mission_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_date": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"user_mission_id",
+					"user_id",
+					"mission_id",
+					"status",
+					"created_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_UserMissionResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserMissionResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserMissionCreateRequest": {
+				"properties": {
+					"mission_id": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"mission_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InProgressMissionsListResponse": {
+				"properties": {
+					"data": {
+						"items": {
+							"properties": {
+								"created_date": {
+									"type": "string",
+									"format": "date-time",
+									"nullable": true
+								},
+								"status": {
+									"type": "string"
+								},
+								"point": {
+									"type": "number",
+									"format": "double"
+								},
+								"body": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"shop_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"mission_id": {
+									"type": "number",
+									"format": "double"
+								},
+								"user_mission_id": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"created_date",
+								"status",
+								"point",
+								"body",
+								"title",
+								"shop_id",
+								"mission_id",
+								"user_mission_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_InProgressMissionsListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/InProgressMissionsListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"jwt": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"info": {
+		"title": "playground-umc-7th-nodejs",
+		"version": "1.0.0",
+		"description": "JWT: /oauth2/login/google → accessToken → Authorize(jwt) → 자물쇠 API 호출",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/users/signup": {
+			"post": {
+				"operationId": "HandleUserSignUp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UserSignUpResponse_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"email": "user@example.com",
+											"user_name": "홍길동",
+											"nickname": "UMC10th",
+											"user_phone": "01012345678",
+											"user_gender": "여성",
+											"birth_data": "2005-09-15",
+											"address": "서울시",
+											"role": "일반 사용자",
+											"point": 0,
+											"password": "password123",
+											"preferences": [
+												1
+											]
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (필수 필드 누락·잘못된 필드명·존재하지 않는 선호 카테고리 ID 등)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "중복된 이메일 (U001)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "회원가입 API",
+				"summary": "회원가입을 처리합니다. (인증 불필요)",
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserSignUpRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/me": {
+			"patch": {
+				"operationId": "HandleUpdateMyProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UserUpdateProfileResponse_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"user_phone": "01012345678",
+											"birth_data": "2005-09-15",
+											"address": "서울시 강남구",
+											"nickname": "UMC10th",
+											"user_gender": "여성",
+											"preferences": [
+												1,
+												2
+											]
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류·잘못된 birth_data·존재하지 않는 선호 카테고리 ID 등",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 유저 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "내 프로필 수정 API",
+				"summary": "프로필 정보를 수정합니다 (전화번호·생일·주소·선호 카테고리 등). JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Users"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserUpdateProfileRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/mypage": {
+			"get": {
+				"operationId": "HandleMypage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse__message-string--user-Express.User__"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "마이페이지 조회 API",
+				"summary": "로그인한 사용자 정보를 조회합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Users"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/users/guest": {
+			"get": {
+				"operationId": "HandleGuestPage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"description": "게스트 페이지 (HTML)",
+				"summary": "로그인 없이 접근 가능한 안내 페이지입니다. (인증 불필요)",
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/users/login": {
+			"get": {
+				"operationId": "HandleLoginPage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				},
+				"description": "로그인 페이지 (HTML)",
+				"summary": "Google OAuth JWT 로그인 페이지로 이동합니다. (인증 불필요)",
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/regions/{regionId}/shops": {
+			"post": {
+				"operationId": "HandleCreateShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ShopResponse_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"shop_name": "UMC 맛집",
+											"shop_position": "서울시 강남구",
+											"shop_explain": "UMC 10기 단골 가게",
+											"shop_phone": "0212345678"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 지역 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "지역 내 가게 등록 API",
+				"summary": "특정 지역에 새 가게를 등록합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "가게를 등록할 지역 ID",
+						"in": "path",
+						"name": "regionId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ShopCreateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shops/{shopId}/reviews": {
+			"post": {
+				"operationId": "HandleCreateReview",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ReviewCreateResponse_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"user_mission_id": 1,
+											"rating": 4.5,
+											"body": "맛있었어요!",
+											"image_urls": [
+												"https://example.com/review1.jpg"
+											]
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류·별점 범위 오류·미션 미완료 등 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 가게 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "해당 미션에 대한 리뷰 중복 (COMMON409)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "가게 리뷰 작성 API",
+				"summary": "특정 가게에 리뷰를 등록합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Reviews"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "리뷰를 작성할 가게 ID",
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReviewCreateRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "HandleGetReviews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ReviewsListResponse_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 가게 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "가게 리뷰 목록 조회 API",
+				"summary": "특정 가게의 리뷰 목록을 커서 기반으로 조회합니다. (인증 불필요)",
+				"tags": [
+					"Reviews"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "가게 ID",
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "페이지네이션 커서 (기본값 0, 이전 응답의 pagination.cursor 사용)",
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/users/me/reviews": {
+			"get": {
+				"operationId": "HandleGetMyReviews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MyReviewsListResponse_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 유저 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "내가 작성한 리뷰 목록 조회 API",
+				"summary": "내가 작성한 리뷰 목록을 커서 기반으로 조회합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Reviews"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "페이지네이션 커서 (기본값 0)",
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/missions": {
+			"post": {
+				"operationId": "HandleCreateMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MissionResponse_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"shop_id": 1,
+											"title": "리뷰 작성 미션",
+											"body": "리뷰를 작성하면 포인트를 드려요",
+											"point": 100
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 가게 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "가게 미션 등록 API",
+				"summary": "특정 가게에 새 미션을 등록합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Missions"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "미션을 등록할 가게 ID",
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MissionCreateRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "HandleGetMissions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MissionsListResponse_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 가게 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "가게 미션 목록 조회 API",
+				"summary": "특정 가게의 미션 목록을 커서 기반으로 조회합니다. (인증 불필요)",
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "가게 ID",
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "페이지네이션 커서 (기본값 0)",
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/missions/challenge": {
+			"post": {
+				"operationId": "HandleChallengeMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UserMissionResponse_"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"mission_id": 1
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 미션 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "이미 도전 중인 미션 (COMMON409)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "미션 도전 API",
+				"summary": "미션에 도전(진행 중 상태로 등록)합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Missions"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserMissionCreateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/me/missions/in-progress": {
+			"get": {
+				"operationId": "HandleGetInProgressMissions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_InProgressMissionsListResponse_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 유저 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "진행 중인 미션 목록 조회 API",
+				"summary": "진행 중(IN_PROGRESS) 미션 목록을 커서 기반으로 조회합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Missions"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "페이지네이션 커서 (기본값 0)",
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/users/me/missions/{userMissionId}/complete": {
+			"patch": {
+				"operationId": "HandleCompleteInProgressMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UserMissionResponse_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "요청 형식 오류·진행 중이 아닌 미션 (COMMON400)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "로그인 필요 (U002)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "존재하지 않는 유저 또는 유저 미션 (COMMON404)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "서버 오류 (COMMON500)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiFailedResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "진행 중 미션 완료 처리 API",
+				"summary": "진행 중 미션을 완료(COMPLETED) 상태로 변경합니다. JWT Bearer 토큰 필요 (Authorize → accessToken)",
+				"tags": [
+					"Missions"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "유저 미션 ID",
+						"in": "path",
+						"name": "userMissionId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

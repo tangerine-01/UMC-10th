@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id          BigInt   @id @default(autoincrement())
+  userName    String   @map("user_name") @db.VarChar(255)
+  nickname    String?  @db.VarChar(32)
+  userPhone   String   @map("user_phone") @db.Char(11)
+  userGender  Gender   @map("user_gender")
+  birthData   DateTime @map("birth_data") @db.Date
+  address     String   @db.Text
+  role        Role
+  point       Int
+  email       String   @db.VarChar(255)
+  preferences Json?
+  password    String   @db.VarChar(255)
+
+  userFoodCategories UserFoodCategory[]
+  shops              Shop[]         @relation("ShopOwner")
+  userMissions        UserMission[]
+  reviews             Review[]
+
+  @@map("user")
+}
+
+model FoodCategory {
+  id                 BigInt             @id @default(autoincrement()) @map("food_category_id")
+  name               String             @map("food_category_name") @db.VarChar(255)
+
+  userFoodCategories UserFoodCategory[]
+
+  @@map("food_category")
+}
+
+model UserFoodCategory {
+  id             BigInt       @id @default(autoincrement())
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  foodCategoryId BigInt       @map("food_category_id")
+  user           User         @relation(fields: [userId], references: [id])
+  userId         BigInt       @map("id2")
+
+  @@index([foodCategoryId], map: "food_category_id")
+  @@index([userId], map: "id2")
+  @@map("user_food_category")
+}
+
+model Region {
+  id         BigInt @id @default(autoincrement())
+  regionName String @map("region_name") @db.VarChar(255)
+
+  shops Shop[]
+
+  @@map("region")
+}
+
+model Shop {
+  id           BigInt  @id @default(autoincrement())
+  ownerId      BigInt  @map("owner_id")
+  regionId     BigInt  @map("region_id")
+  shopName     String  @map("shop_name") @db.VarChar(255)
+  shopPosition String  @map("shop_position") @db.VarChar(255)
+  shopExplain  String? @map("shop_explain") @db.Text
+  shopPhone    String? @map("shop_phone") @db.VarChar(32)
+  status       String? @db.VarChar(32)
+
+  owner  User   @relation("ShopOwner", fields: [ownerId], references: [id])
+  region Region @relation(fields: [regionId], references: [id])
+
+  missions Mission[]
+  reviews  Review[]
+
+  @@index([ownerId], map: "shop_owner_id")
+  @@index([regionId], map: "shop_region_id")
+  @@map("shop")
+}
+
+model Mission {
+  id          BigInt    @id @default(autoincrement())
+  shopId      BigInt    @map("shop_id")
+  title       String    @db.VarChar(255)
+  body        String    @db.Text
+  point       Int
+  status      String?   @db.VarChar(32)
+  createdDate DateTime? @map("created_date")
+
+  shop         Shop          @relation(fields: [shopId], references: [id])
+  userMissions UserMission[]
+
+  @@index([shopId], map: "mission_shop_id")
+  @@map("mission")
+}
+
+model UserMission {
+  id          BigInt    @id @default(autoincrement())
+  userId      BigInt    @map("user_id")
+  missionId   BigInt    @map("mission_id")
+  status      String    @db.VarChar(32)
+  createdDate DateTime? @map("created_date")
+
+  user    User    @relation(fields: [userId], references: [id])
+  mission Mission @relation(fields: [missionId], references: [id])
+  review  Review?
+
+  @@index([userId], map: "user_mission_user_id")
+  @@index([missionId], map: "user_mission_mission_id")
+  @@map("user_mission")
+}
+
+model Review {
+  id            BigInt    @id @default(autoincrement())
+  userId        BigInt    @map("user_id")
+  shopId        BigInt    @map("shop_id")
+  userMissionId BigInt    @unique @map("user_mission_id")
+  rating        Float
+  body          String    @db.Text
+  createdDate   DateTime? @map("created_date")
+
+  user        User        @relation(fields: [userId], references: [id])
+  shop        Shop        @relation(fields: [shopId], references: [id])
+  userMission UserMission @relation(fields: [userMissionId], references: [id])
+  images      ReviewImage[]
+
+  @@index([shopId], map: "review_shop_id")
+  @@index([userId], map: "review_user_id")
+  @@index([userMissionId], map: "review_user_mission_id")
+  @@map("review")
+}
+
+model ReviewImage {
+  id       BigInt @id @default(autoincrement())
+  reviewId BigInt @map("review_id")
+  s3Url    String @map("s3_url") @db.Text
+  s3Key    String @map("s3_key") @db.VarChar(255)
+
+  review Review @relation(fields: [reviewId], references: [id])
+
+  @@index([reviewId], map: "review_image_review_id")
+  @@map("review_image")
+}
+
+enum Gender {
+  여성
+  남성
+}
+
+enum Role {
+  일반_사용자 @map("일반 사용자")
+  가게_운영자 @map("가게 운영자")
+}

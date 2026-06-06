@@ -1,0 +1,132 @@
+import type { InProgressMissionRow, MissionRow, UserMissionRow } from "../repositories/mission.repository.js";
+
+export interface MissionCreateRequest {
+  shop_id: number;
+  title: string;
+  body: string;
+  point: number;
+}
+
+export interface MissionResponse {
+  mission_id: number;
+  shop_id: number;
+  title: string;
+  body: string;
+  point: number;
+  status: string | null;
+  created_date: Date | null;
+}
+
+export interface MissionsListResponse {
+  data: Array<{
+    mission_id: number;
+    shop_id: number;
+    title: string;
+    body: string;
+    point: number;
+    status: string | null;
+    created_date: Date | null;
+  }>;
+  pagination: { cursor: number | null };
+}
+
+export const bodyToMission = (body: MissionCreateRequest, shopId: number) => {
+  return {
+    shop_id: shopId,
+    title: body.title,
+    body: body.body,
+    point: body.point,
+  };
+};
+
+export const responseFromMission = (mission: MissionRow) => {
+  return {
+    mission_id: mission.id,
+    shop_id: mission.shop_id,
+    title: mission.title,
+    body: mission.body,
+    point: mission.point,
+    status: mission.status,
+    created_date: mission.created_date,
+  };
+};
+
+export const responseFromMissions = (missions: MissionRow[]) => {
+  const lastMission = missions[missions.length - 1];
+  return {
+    data: missions.map((m) => ({
+      mission_id: m.id,
+      shop_id: m.shop_id,
+      title: m.title,
+      body: m.body,
+      point: m.point,
+      status: m.status,
+      created_date: m.created_date,
+    })),
+    pagination: {
+      cursor: lastMission ? lastMission.id : null,
+    },
+  };
+};
+
+export interface UserMissionCreateRequest {
+  mission_id: number;
+}
+
+export interface UserMissionResponse {
+  user_mission_id: number;
+  user_id: number;
+  mission_id: number;
+  status: string;
+  created_date: Date | null;
+}
+
+export interface InProgressMissionsListResponse {
+  data: Array<{
+    user_mission_id: number;
+    mission_id: number;
+    shop_id: number;
+    title: string;
+    body: string;
+    point: number;
+    status: string;
+    created_date: Date | null;
+  }>;
+  pagination: { cursor: number | null };
+}
+
+export const bodyToUserMission = (body: UserMissionCreateRequest, userId: number) => {
+  return {
+    user_id: userId,
+    mission_id: body.mission_id,
+  };
+};
+
+export const responseFromUserMission = (userMission: UserMissionRow) => {
+  return {
+    user_mission_id: userMission.id,
+    user_id: userMission.user_id,
+    mission_id: userMission.mission_id,
+    status: userMission.status,
+    created_date: userMission.created_date,
+  };
+};
+
+export const responseFromInProgressMissions = (rows: InProgressMissionRow[]) => {
+  const lastRow = rows[rows.length - 1];
+  return {
+    data: rows.map((r) => ({
+      user_mission_id: r.user_mission_id,
+      mission_id: r.mission_id,
+      shop_id: r.shop_id,
+      title: r.title,
+      body: r.body,
+      point: r.point,
+      status: r.status,
+      created_date: r.created_date,
+    })),
+    pagination: {
+      cursor: lastRow ? lastRow.user_mission_id : null,
+    },
+  };
+};

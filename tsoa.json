@@ -1,0 +1,23 @@
+{
+    "entryFile": "src/index.ts",
+    "noImplicitAdditionalProperties": "throw-on-extras",
+    "controllerPathGlobs": ["src/**/*.controller.ts"],
+    "spec": {
+      "outputDirectory": "dist",
+      "specVersion": 3,
+      "description": "JWT: /oauth2/login/google → accessToken → Authorize(jwt) → 자물쇠 API 호출",
+      "securityDefinitions": {
+        "jwt": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "routes": {
+      "routesDir": "src/generated",
+      "esm": true,
+      "authenticationModule": "./src/common/middlewares/auth.middleware.ts"
+    }
+  }
+  
