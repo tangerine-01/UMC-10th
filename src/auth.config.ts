@@ -58,11 +58,13 @@ const googleVerify = async (profile: Profile): Promise<AuthUserPayload> => {
 };
 
 // 3. Google Strategy
+const GOOGLE_CALLBACK_PATH = "/oauth2/callback/google";
+
 export const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID!,
     clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECRET!,
-    callbackURL: "/oauth2/callback/google",
+    callbackURL: `${process.env.APP_BASE_URL}${GOOGLE_CALLBACK_PATH}`,
     scope: ["email", "profile"],
   },
   async (_accessToken, _refreshToken, profile, cb) => {
