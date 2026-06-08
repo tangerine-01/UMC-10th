@@ -46,6 +46,7 @@ app.use(express.static('public'));    // 정적 파일 접근
 app.use(express.json());              // request의 본문을 json으로 해석할 수 있도록 함(JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
 app.use(passport.initialize());
+app.set("trust proxy", true);
 
 // Express.js에 생성한 엔드 포인트들을 register
 const router = express.Router();
